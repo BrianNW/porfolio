@@ -133,7 +133,7 @@ export default function Home() {
       {/* Arrows */}
       {current > 0 && (
         <button
-          className="absolute left-10 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/30 dark:bg-zinc-800/30 border border-white/40 dark:border-zinc-700/40 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition"
+          className="absolute left-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
           style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
           onClick={() => scrollToSection(current - 1)}
           aria-label="Scroll Left"
@@ -143,7 +143,7 @@ export default function Home() {
       )}
       {current < sectionList.length - 1 && (
         <button
-          className="absolute right-10 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/30 dark:bg-zinc-800/30 border border-white/40 dark:border-zinc-700/40 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition"
+          className="absolute right-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
           style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
           onClick={() => scrollToSection(current + 1)}
           aria-label="Scroll Right"
