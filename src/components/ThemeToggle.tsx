@@ -1,7 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function ThemeToggle() {
+type ThemeToggleProps = {
+  onThemeChange?: (isDark: boolean) => void;
+};
+
+export default function ThemeToggle({ onThemeChange }: ThemeToggleProps) {
   const [theme, setTheme] = useState<"light" | "dark" | null>(null);
 
   useEffect(() => {
@@ -13,7 +17,9 @@ export default function ThemeToggle() {
       } else {
         document.documentElement.classList.remove("dark");
       }
+      if (onThemeChange) onThemeChange(isDark);
     }
+    // eslint-disable-next-line
   }, []);
 
   const toggleTheme = () => {
@@ -27,6 +33,7 @@ export default function ThemeToggle() {
         document.documentElement.classList.remove("dark");
       }
     }
+    if (onThemeChange) onThemeChange(newTheme === "dark");
   };
 
   if (!theme) return null;

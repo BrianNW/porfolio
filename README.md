@@ -20,6 +20,55 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Using Oakes Grotesk Semi Bold as the Site Font
+
+This project is configured to use the Oakes Grotesk Semi Bold font as the default site font. **You must provide the web font files** (WOFF/WOFF2) due to licensing restrictions. Follow these steps:
+
+1. **Obtain the font files**: Purchase or download `OakesGrotesk-SemiBold.woff2` and `OakesGrotesk-SemiBold.woff` from the official foundry or your license provider.
+2. **Add the font files**: Place them in the `public/fonts` directory:
+
+   ```
+   public/fonts/OakesGrotesk-SemiBold.woff2
+   public/fonts/OakesGrotesk-SemiBold.woff
+   ```
+
+3. **Font-face CSS**: The following is already (or should be) added to `src/app/globals.css`:
+
+   ```css
+   @font-face {
+     font-family: 'Oakes Grotesk';
+     src: url('/fonts/OakesGrotesk-SemiBold.woff2') format('woff2'),
+          url('/fonts/OakesGrotesk-SemiBold.woff') format('woff');
+     font-weight: 600;
+     font-style: normal;
+     font-display: swap;
+   }
+   html, body {
+     font-family: 'Oakes Grotesk', Arial, sans-serif;
+     font-weight: 600;
+   }
+   ```
+
+4. **Tailwind config**: Optionally, extend your `tailwind.config.js` to use the custom font as the default sans font:
+
+   ```js
+   // tailwind.config.js
+   module.exports = {
+     theme: {
+       extend: {
+         fontFamily: {
+           sans: ['Oakes Grotesk', 'Arial', 'sans-serif'],
+         },
+       },
+     },
+     // ...rest of config
+   };
+   ```
+
+5. **Restart your dev server** after adding the font files.
+
+> **Note:** The font will not display unless you provide the actual font files in the correct directory.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
