@@ -1,3 +1,25 @@
+/* Typewriter cursor blink */
+.typewriter-cursor {
+  display: inline-block;
+  width: 1ch;
+  color: inherit;
+  animation: typewriter-blink 1.1s steps(1) infinite;
+}
+@keyframes typewriter-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+/* Black glassmorphic background for section titles */
+.title-glass-black {
+  background: linear-gradient(120deg, #05050a 0%, #14141e 100%);
+  border: 1.5px solid rgba(20,20,30,0.35);
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.28), 0 1.5px 8px 0 rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  padding: 0.5em 1.5em;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
 /* Purple glassmorphic button background for Contact Me */
 .btn-glass-purple {
   background: linear-gradient(120deg, rgba(167,139,250,0.32) 0%, rgba(76,29,149,0.22) 100%);
@@ -13,16 +35,23 @@
   box-shadow: 0 4px 24px 0 rgba(167,139,250,0.18), 0 2px 12px 0 rgba(76,29,149,0.18);
   border-color: rgba(167,139,250,0.55);
 }
-/* Custom faint green I-beam cursor for text fields */
+/* Custom dark purple I-beam cursor for text fields in light mode */
 input[type="text"], input[type="email"], input[type="password"], textarea, [contenteditable="true"] {
-  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="4" width="4" height="24" rx="2" fill="%2300ff87" fill-opacity="0.5"/></svg>') 16 16, text !important;
+  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="4" width="4" height="24" rx="2" fill="%234c1d95" fill-opacity="0.7"/></svg>') 16 16, text !important;
 }
-/* Custom green arrow cursor for interactive elements */
+/* Custom dark purple arrow cursor for interactive elements in light mode */
 a, button, [role="button"], input[type="button"], input[type="submit"], .cursor-pointer {
-  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L28 16L16 18L18 28L4 4Z" fill="%2300ff87" stroke="%2300ff87" stroke-width="2"/></svg>') 2 2, pointer !important;
+  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L28 16L16 18L18 28L4 4Z" fill="%234c1d95" stroke="%234c1d95" stroke-width="2"/></svg>') 2 2, pointer !important;
 }
 html, body {
   cursor: none !important;
+}
+/* Custom green cursors for dark mode */
+.dark input[type="text"], .dark input[type="email"], .dark input[type="password"], .dark textarea, .dark [contenteditable="true"] {
+  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="4" width="4" height="24" rx="2" fill="%2300ff87" fill-opacity="0.5"/></svg>') 16 16, text !important;
+}
+.dark a, .dark button, .dark [role="button"], .dark input[type="button"], .dark input[type="submit"], .dark .cursor-pointer {
+  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L28 16L16 18L18 28L4 4Z" fill="%2300ff87" stroke="%2300ff87" stroke-width="2"/></svg>') 2 2, pointer !important;
 }
 /* Chromatic glitch color palette */
 :root {
@@ -39,30 +68,46 @@ html, body {
 /* Subtle chromatic aberration always, multicolor intensifies during glitch window */
 .glitch-chromatic {
   position: relative;
-  color: #fff;
-  font-weight: 700 !important;
-  z-index: 10;
-  pointer-events: none;
-  --chromatic-glitch: 0;
+  color: #18181b !important;
   text-shadow:
     1.5px 0 var(--glitch-cyan),
-    -1.5px 0 var(--glitch-red);
-  animation: chromatic-aberration 6s steps(1, end) infinite;
+    -1.5px 0 var(--glitch-red),
+    1px 1px var(--glitch-pink),
+    -1px -1px var(--glitch-green),
+    0 2px var(--glitch-yellow);
 }
+  .dark .glitch-chromatic {
+    color: #fff !important;
+    text-shadow:
+      1.5px 0 var(--glitch-cyan),
+      -1.5px 0 var(--glitch-red),
+      1px 1px var(--glitch-pink),
+      -1px -1px var(--glitch-green),
+      0 2px var(--glitch-yellow);
+    font-weight: 700 !important;
+    pointer-events: none;
+    --chromatic-glitch: 0;
+    animation: chromatic-aberration 6s steps(1, end) infinite;
+  }
 .glitch-chromatic.glitch,
 .glitch-chromatic[data-glitch="1"] {
   --chromatic-glitch: 1;
 }
 .glitch-chromatic[style*="--chromatic-glitch: 1"],
 .glitch-chromatic.glitch {
-    font-weight: 400 !important;
+  font-weight: 400 !important;
   text-shadow:
     6px 0 var(--glitch-cyan),
     -6px 0 var(--glitch-red),
     4px 4px var(--glitch-pink),
     -4px -4px var(--glitch-green),
     0 5px var(--glitch-yellow);
-  filter: drop-shadow(0 0 0px var(--glitch-cyan)) drop-shadow(0 0 0px var(--glitch-red)) drop-shadow(0 0 1px var(--glitch-yellow));
+  filter:
+    drop-shadow(0 0 0.5px var(--glitch-cyan))
+    drop-shadow(0 0 0.4px var(--glitch-red))
+    drop-shadow(0 0 0.7px var(--glitch-yellow))
+    drop-shadow(0 0 0.4px var(--glitch-pink))
+    drop-shadow(0 0 0.4px var(--glitch-green));
 }
 @media (prefers-reduced-motion: reduce) {
   .glitch-chromatic {
@@ -75,16 +120,40 @@ html, body {
     text-shadow:
       1.5px 0 var(--glitch-cyan),
       -1.5px 0 var(--glitch-red);
+    transform: none;
   }
-  93%, 94%, 95% {
-    /* Intense multicolor chromatic aberration */
+  93% {
+    /* Glitch shake left */
     text-shadow:
       2.5px 0 var(--glitch-cyan),
       -2.5px 0 var(--glitch-red),
       2px 2px var(--glitch-pink),
       -2px -2px var(--glitch-green),
       0 3px var(--glitch-yellow);
-    filter: drop-shadow(0 0 12px var(--glitch-cyan)) drop-shadow(0 0 8px var(--glitch-red)) drop-shadow(0 0 16px var(--glitch-yellow));
+    filter: drop-shadow(0 0 0.5px var(--glitch-cyan)) drop-shadow(0 0 0.4px var(--glitch-red)) drop-shadow(0 0 0.7px var(--glitch-yellow)) drop-shadow(0 0 0.4px var(--glitch-pink)) drop-shadow(0 0 0.4px var(--glitch-green));
+    transform: translate(-3px, -1px) skewX(-8deg);
+  }
+  94% {
+    /* Glitch shake right */
+    text-shadow:
+      2.5px 0 var(--glitch-cyan),
+      -2.5px 0 var(--glitch-red),
+      2px 2px var(--glitch-pink),
+      -2px -2px var(--glitch-green),
+      0 3px var(--glitch-yellow);
+    filter: drop-shadow(0 0 0.5px var(--glitch-cyan)) drop-shadow(0 0 0.4px var(--glitch-red)) drop-shadow(0 0 0.7px var(--glitch-yellow)) drop-shadow(0 0 0.4px var(--glitch-pink)) drop-shadow(0 0 0.4px var(--glitch-green));
+    transform: translate(4px, 2px) skewX(10deg);
+  }
+  95% {
+    /* Glitch shake up */
+    text-shadow:
+      2.5px 0 var(--glitch-cyan),
+      -2.5px 0 var(--glitch-red),
+      2px 2px var(--glitch-pink),
+      -2px -2px var(--glitch-green),
+      0 3px var(--glitch-yellow);
+    filter: drop-shadow(0 0 0.5px var(--glitch-cyan)) drop-shadow(0 0 0.4px var(--glitch-red)) drop-shadow(0 0 0.7px var(--glitch-yellow)) drop-shadow(0 0 0.4px var(--glitch-pink)) drop-shadow(0 0 0.4px var(--glitch-green));
+    transform: translate(-2px, 3px) skewY(-6deg);
   }
 }
 

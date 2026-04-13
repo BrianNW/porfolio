@@ -1,7 +1,9 @@
 
 "use client";
+
 import GlitchDivider from "../components/GlitchDivider";
 import GlitchTitle from "../components/GlitchTitle";
+import TypewriterText from "../components/TypewriterText";
 
 
 import { useState, useRef, useEffect, useContext } from "react";
@@ -117,8 +119,7 @@ import { ThemeContext } from "../components/ClientLayout";
 function ServicesSection1Col() {
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-4 py-32 mx-auto" style={{ background: 'transparent' }}>
-      {/* <h2 className="section-title-glitch">Services</h2> */}
-        <GlitchTitle as="h2" className="text-zinc-800 dark:text-white">Services</GlitchTitle>
+      <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-8">Services</GlitchTitle>
       <VerticalCarouselServices />
     </section>
   );
@@ -199,7 +200,7 @@ export default function Home() {
         <main className="w-full h-screen flex items-stretch bg-white dark:bg-black transition-colors duration-[1200ms] ease-[cubic-bezier(.4,0,.2,1)] min-h-0 absolute top-0 left-0" style={{ background: 'transparent' }}>
           {/* 2 columns, each 50% width, 100vh height */}
           <div className="w-1/2 h-full flex items-stretch justify-center bg-white dark:bg-zinc-900 min-h-0">
-            <div className="flex flex-col gap-6 items-center md:items-start text-center md:text-left max-w-lg w-full mr-0 ml-auto h-full min-h-0 justify-center">
+            <div className="flex flex-col gap-6 items-center md:items-start text-center md:text-left max-w-lg w-full mr-0 ml-auto h-full min-h-0 justify-center px-5 sm:px-8">
               <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="max-w-full text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left">
                 {typed}
                 {typed.length < fullText.length && <span className="animate-pulse">|</span>}
@@ -238,11 +239,10 @@ export default function Home() {
       key: "about",
       content: (
         <section className="flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-white dark:bg-zinc-900 mx-auto" style={{ background: 'transparent' }}>
-          {/* <h2 className="section-title-glitch">About Me</h2> */}
-            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white">About Me</GlitchTitle>
-          <p className="text-lg text-zinc-700 dark:text-zinc-200 text-center max-w-xl">
+          <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-8">About Me</GlitchTitle>
+          <TypewriterText className="text-base md:text-lg lg:text-xl font-normal text-zinc-700 dark:text-zinc-200 text-center max-w-xl" speed={45}>
             I’m a passionate web developer and designer with a love for crafting beautiful, user-friendly digital experiences. I specialize in building modern, responsive websites that help businesses and individuals stand out online. My approach combines clean design, accessibility, and performance to deliver results you’ll love.
-          </p>
+          </TypewriterText>
         </section>
       ),
     },
@@ -255,7 +255,9 @@ export default function Home() {
           {/* Desktop layout */}
             <div className="hidden md:flex flex-col justify-center items-center w-full md:w-1/3 pr-0 md:pr-12">
               {/* <h2 className="section-title-glitch text-left md:text-right mb-0">Past Projects</h2> */}
-            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-left md:text-right mb-0">Past Projects</GlitchTitle>
+            {/* Mobile: glass background, Desktop: normal */}
+            <GlitchTitle as="h2" glitchClassName="glitch-chromatic" className="title-glass-black md:hidden text-zinc-700 !text-[#18181b] dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-left md:text-right mb-0">Past Projects</GlitchTitle>
+            <GlitchTitle as="h2" className="hidden md:inline-block text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-left md:text-right mb-0">Past Projects</GlitchTitle>
           </div>
           <div className="flex-1 h-full flex items-center">
             <VerticalCarouselProjects />
@@ -272,7 +274,7 @@ export default function Home() {
       content: (
         <section className="flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-white dark:bg-zinc-900 mx-auto" style={{ background: 'transparent' }}>
           {/* <h2 className="section-title-glitch text-center">FAQ</h2> */}
-            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-center">FAQ</GlitchTitle>
+            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">FAQ</GlitchTitle>
           <div className="w-full max-w-2xl divide-y divide-zinc-200 dark:divide-zinc-700 rounded-xl overflow-hidden shadow-lg">
             {[
               {
@@ -339,7 +341,7 @@ export default function Home() {
       content: (
         <section id="contact" className="flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-8 py-32 bg-white dark:bg-zinc-900 mx-auto" style={{ background: 'transparent' }}>
           {/* <h2 className="section-title-glitch text-center">Contact Me</h2> */}
-            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-center">Contact Me</GlitchTitle>
+            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">Contact Me</GlitchTitle>
           {submitted ? (
             <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
           ) : (
@@ -415,26 +417,53 @@ export default function Home() {
           <PricingCalculatorModal open={pricingOpen} onClose={() => setPricingOpen(false)} />
         </div>
         {/* Section navigation arrows */}
-        {current > 0 && (
-          <button
-            className="absolute left-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
-            style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
-            onClick={() => flipToSection(current - 1)}
-            aria-label="Scroll Left"
-          >
-            <span className="text-3xl text-[#a78bfa]">&#8592;</span>
-          </button>
-        )}
-        {current < sections.length - 1 && (
-          <button
-            className="absolute right-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
-            style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
-            onClick={() => flipToSection(current + 1)}
-            aria-label="Scroll Right"
-          >
-            <span className="text-3xl text-[#a78bfa]">&#8594;</span>
-          </button>
-        )}
+        {/* Section navigation arrows: bottom on mobile, side on desktop */}
+        <div>
+          {/* Mobile: bottom fixed above progress bar */}
+          <div className="fixed bottom-20 left-0 right-0 z-50 flex justify-between items-center px-8 md:hidden pointer-events-none">
+            {current > 0 && (
+              <button
+                className="p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto"
+                style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
+                onClick={() => flipToSection(current - 1)}
+                aria-label="Scroll Left"
+              >
+                <span className="text-3xl text-[#a78bfa]">&#8592;</span>
+              </button>
+            )}
+            {current < sections.length - 1 && (
+              <button
+                className="p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto"
+                style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
+                onClick={() => flipToSection(current + 1)}
+                aria-label="Scroll Right"
+              >
+                <span className="text-3xl text-[#a78bfa]">&#8594;</span>
+              </button>
+            )}
+          </div>
+          {/* Desktop: side center as before */}
+          {current > 0 && (
+            <button
+              className="hidden md:block absolute left-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
+              style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
+              onClick={() => flipToSection(current - 1)}
+              aria-label="Scroll Left"
+            >
+              <span className="text-3xl text-[#a78bfa]">&#8592;</span>
+            </button>
+          )}
+          {current < sections.length - 1 && (
+            <button
+              className="hidden md:block absolute right-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
+              style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
+              onClick={() => flipToSection(current + 1)}
+              aria-label="Scroll Right"
+            >
+              <span className="text-3xl text-[#a78bfa]">&#8594;</span>
+            </button>
+          )}
+        </div>
         {/* Book-style flip animation container */}
         <div className="relative w-full h-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
           <AnimatePresence initial={false} custom={direction} mode="wait">

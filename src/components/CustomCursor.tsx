@@ -1,64 +1,69 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
+
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const trailRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [hideCursor, setHideCursor] = useState(false);
   const trailLength = 8;
+  // Detect dark mode
+  const [isDark, setIsDark] = useState(false);
 
+  // Track theme mode
   useEffect(() => {
-    // Hide custom cursor on interactive elements
-    const setPointer = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.closest('a,button,[role="button"],input[type="button"],input[type="submit"],.cursor-pointer') ||
-        target.closest('input[type="text"],input[type="email"],input[type="password"],textarea,[contenteditable="true"]')
-      ) {
-        setHideCursor(true);
-      } else {
-        setHideCursor(false);
-      }
-    };
-    window.addEventListener('pointerover', setPointer);
-    window.addEventListener('pointerout', setPointer);
+    const checkDark = () => setIsDark(document.documentElement.classList.contains('dark'));
+    checkDark();
+    const observer = new MutationObserver(checkDark);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  // Mouse move logic for cursor and trail
+  useEffect(() => {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let lastX = mouseX;
-    let lastY = mouseY;
-    const trailPositions = Array(trailLength).fill([mouseX, mouseY]);
+    const coords = Array(trailLength).fill([mouseX, mouseY]);
 
-    const moveCursor = (e: MouseEvent) => {
+    function moveCursor(e: MouseEvent) {
       mouseX = e.clientX;
       mouseY = e.clientY;
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+        cursorRef.current.style.transform = `translate3d(${mouseX - 11}px, ${mouseY - 11}px, 0)`;
       }
-    };
-
-    const animate = () => {
-      lastX += (mouseX - lastX) * 0.2;
-      lastY += (mouseY - lastY) * 0.2;
-      trailPositions.unshift([lastX, lastY]);
-      trailPositions.length = trailLength;
+      // Move trail
+      coords.unshift([mouseX, mouseY]);
+      coords.length = trailLength;
       trailRefs.current.forEach((el, i) => {
         if (el) {
-          const [tx, ty] = trailPositions[i + 1] || [lastX, lastY];
-          el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-          el.style.opacity = `${0.08 + (0.12 * (1 - i / trailLength))}`;
+          const [x, y] = coords[i + 1] || [mouseX, mouseY];
+          el.style.transform = `translate3d(${x - 11}px, ${y - 11}px, 0)`;
         }
       });
-      requestAnimationFrame(animate);
-    };
+    }
 
-    window.addEventListener("mousemove", moveCursor);
-    animate();
+    // Hide cursor on input, textarea, contenteditable, or when pointer is over interactive elements
+    function handlePointerOver(e: PointerEvent) {
+      const target = e.target as HTMLElement;
+      if (
+        target.closest('input, textarea, [contenteditable="true"], button, a, select, [role="button"], [tabindex]')
+      ) {
+        setHideCursor(true);
+      }
+    }
+    function handlePointerOut(e: PointerEvent) {
+      setHideCursor(false);
+    }
+
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('pointerover', handlePointerOver);
+    window.addEventListener('pointerout', handlePointerOut);
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener('pointerover', setPointer);
-      window.removeEventListener('pointerout', setPointer);
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('pointerover', handlePointerOver);
+      window.removeEventListener('pointerout', handlePointerOut);
     };
-  }, []);
+  }, [trailLength]);
 
   return (
     <>
@@ -73,13 +78,15 @@ export default function CustomCursor() {
               width: 22,
               height: 22,
               borderRadius: "50%",
-              border: "2px solid #00ff87",
-              background: "transparent",
-              boxShadow: "0 0 16px 2px #00ff8788",
+              border: isDark ? "2.5px solid #00ff87" : "2.5px solid #7c3aed",
+              background: isDark ? "rgba(0,255,135,0.18)" : "#7c3aed",
+              boxShadow: isDark
+                ? "0 0 24px 6px #00ff87, 0 0 48px 12px #00ff87cc"
+                : "0 0 24px 8px #a78bfa88, 0 0 48px 16px #7c3aed88",
               pointerEvents: "none",
-              zIndex: 9999,
-              mixBlendMode: "lighten",
-              transform: "translate3d(-100px, -100px, 0)",
+              zIndex: 2147483647,
+              mixBlendMode: isDark ? "lighten" : undefined,
+              transform: "translate3d(0, 0, 0)",
               transition: "border 0.2s, box-shadow 0.2s",
             }}
           />
@@ -94,14 +101,18 @@ export default function CustomCursor() {
                 width: 22,
                 height: 22,
                 borderRadius: "50%",
-                border: "2px solid #00ff87",
-                background: "transparent",
+                border: isDark ? "2.5px solid #00ff87" : "2.5px solid #7c3aed",
+                background: isDark ? "rgba(0,255,135,0.10)" : "#7c3aed",
+                boxShadow: isDark
+                  ? undefined
+                  : "0 0 16px 6px #a78bfa88, 0 0 32px 12px #7c3aed88",
+                mixBlendMode: isDark ? "lighten" : undefined,
                 pointerEvents: "none",
-                zIndex: 9998,
-                opacity: 0.08 + 0.08 * (1 - i / trailLength),
-                filter: "blur(6px)",
+                zIndex: 2147483646,
+                opacity: 0.12 + 0.08 * (1 - i / trailLength),
+                filter: "blur(8px)",
                 mixBlendMode: "lighten",
-                transform: "translate3d(-100px, -100px, 0)",
+                transform: "translate3d(0, 0, 0)",
                 transition: "border 0.2s, box-shadow 0.2s",
               }}
             />
