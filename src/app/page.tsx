@@ -188,7 +188,7 @@ export default function Home() {
       content: (
         <main className="relative flex flex-col md:flex-row items-stretch justify-center min-h-screen w-full bg-white/80 dark:bg-zinc-900/80 overflow-hidden" style={{ background: 'transparent' }}>
           {/* Left column: animated typewriter and video background in dark mode */}
-            <div className="relative flex flex-col gap-6 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-0 justify-center px-4 md:pl-12 sm:px-6 z-10">
+            <div className="relative flex flex-col gap-6 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[60vh] md:min-h-0 justify-center px-4 md:pl-12 sm:px-6 z-10">
               {/* Overlay for better text visibility */}
               <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
             <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
@@ -228,7 +228,7 @@ export default function Home() {
             )}
           </div>
           {/* Right column: portrait */}
-            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-0">
+            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[40vh] md:min-h-0">
             {/* Blurred, darkened background image */}
             <div className="absolute inset-0 w-full h-full z-0">
               <Image src="/portrait2.jpg" alt="Portrait background" fill className="object-cover w-full h-full blur-2xl brightness-50" priority unoptimized />
