@@ -33,6 +33,13 @@ Together, we’ll turn your tech headaches into high-fives and your ideas into i
     desc: `Why hide on page two? I’ll help you climb the search ranks with proven SEO tactics that get you seen by the right people—at the right time. 
 
 Enjoy more clicks, more leads, and the kind of online presence that makes your competitors jealous.`
+  },
+  {
+    icon: "\uD83D\uDD16",
+    title: "White Label",
+    desc: `Want all the credit with none of the headaches? My white label service lets you offer top-tier web solutions under your own brand, while I handle the heavy lifting behind the scenes. Your clients get seamless results, you get all the applause (and maybe a standing ovation).
+
+Think of me as your digital secret weapon—ready to swoop in, deliver pixel-perfect projects, and then vanish into the night (cape optional). You focus on growing your business, I’ll make sure your reputation stays flawless.`
   }
 ];
 
@@ -49,16 +56,7 @@ export default function DraggableMosaicServices() {
     Math.floor(Math.random() * 2000) + 1000,
   ], []);
 
-  // Auto-move animation keyframes (gentle floating)
-  const autoMove = {
-    x: [0, 40, 0, -40, 0],
-    y: [0, 24, 0, -24, 0],
-    transition: {
-      duration: 8,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  };
+
 
 
   const { isDark } = useContext(ThemeContext);
@@ -110,15 +108,14 @@ export default function DraggableMosaicServices() {
         drag
         dragConstraints={constraintsRef}
         dragElastic={0.2}
-        className="grid grid-cols-3 grid-rows-2 gap-6 w-full h-[60vh]"
+        className="grid grid-cols-3 grid-rows-2 gap-0 w-full h-[60vh]"
         style={{ touchAction: 'none', cursor: 'grab' }}
-        animate={isDragging ? {} : autoMove}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}
       >
-        {/* Card 1: Large, spans 2 rows */}
+        {/* Card 1: UI/UX Design (large, spans 2 rows) */}
         <div
-          className="row-span-2 col-span-1 flex flex-col items-center justify-center bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700/40 backdrop-blur-md shadow-xl p-6 sm:p-8 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="row-span-2 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(0); setClickedGlitch(0); }}
         >
           <GlitchTitle
@@ -129,9 +126,9 @@ export default function DraggableMosaicServices() {
             {services[0].title}
           </GlitchTitle>
         </div>
-        {/* Card 2: Top right, wide */}
+        {/* Card 2: Web Development (top right, wide) */}
         <div
-          className="row-span-1 col-span-2 flex flex-col items-center justify-center bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700/40 backdrop-blur-md shadow-xl p-6 sm:p-8 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="row-span-1 col-span-2 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(1); setClickedGlitch(1); }}
         >
           <GlitchTitle
@@ -142,9 +139,9 @@ export default function DraggableMosaicServices() {
             {services[1].title}
           </GlitchTitle>
         </div>
-        {/* Card 3: Bottom center */}
+        {/* Card 3: Consulting (bottom center) */}
         <div
-          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700/40 backdrop-blur-md shadow-xl p-6 sm:p-8 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(2); setClickedGlitch(2); }}
         >
           <GlitchTitle
@@ -155,9 +152,9 @@ export default function DraggableMosaicServices() {
             {services[2].title}
           </GlitchTitle>
         </div>
-        {/* Card 4: Bottom right */}
+        {/* Card 4: SEO (bottom right) */}
         <div
-          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700/40 backdrop-blur-md shadow-xl p-6 sm:p-8 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(3); setClickedGlitch(3); }}
         >
           <GlitchTitle
@@ -166,6 +163,20 @@ export default function DraggableMosaicServices() {
             fixedInterval={glitchIntervals[3]}
           >
             {services[3].title}
+          </GlitchTitle>
+        </div>
+
+        {/* Card 5: White Label (bottom left) */}
+        <div
+          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          onClick={() => { setOpenIdx(4); setClickedGlitch(4); }}
+        >
+          <GlitchTitle
+            as="span"
+            className={`text-2xl sm:text-4xl font-bold mb-2 font-mono${openIdx === 4 ? ' force-glitch' : ''}${clickedGlitch === 4 ? ' glitch' : ''}`}
+            fixedInterval={glitchIntervals[3]}
+          >
+            {services[4].title}
           </GlitchTitle>
         </div>
       </motion.div>

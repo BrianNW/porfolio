@@ -103,14 +103,14 @@ export default function VerticalCarouselProjects() {
           <div
             key={idx + project.name}
             className="w-full"
-            style={{ height: itemHeight, minHeight: itemHeight }}
+            style={{ height: itemHeight, minHeight: itemHeight, margin: 0, padding: 0 }}
           >
             <img
               src={`/projects/${project.file}`}
               alt={project.name}
-              className="object-contain w-full h-full"
+              className="object-cover w-full h-full block"
               draggable={false}
-              style={{ borderRadius: 0, margin: 0, padding: 0 }}
+              style={{ borderRadius: 0, margin: 0, padding: 0, boxShadow: 'none', background: 'none' }}
             />
           </div>
         ))}

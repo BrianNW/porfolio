@@ -254,7 +254,18 @@ export default function Home() {
     {
       key: "projects",
       content: (
-        <section className="relative flex flex-col md:flex-row items-stretch justify-center min-h-screen w-full max-w-5xl px-0 md:px-4 py-0 md:py-32 mx-auto" style={{ background: 'transparent' }}>
+        <section className="relative flex flex-col md:flex-row items-stretch justify-center min-h-screen w-full max-w-5xl px-0 md:px-4 py-0 md:py-32 mx-auto overflow-hidden" style={{ background: 'transparent' }}>
+          {/* Cyberpunk video background (dark mode only) */}
+          {isDark && (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="fixed top-0 left-0 w-screen h-screen object-cover z-0 opacity-60 pointer-events-none"
+              src="/cyberpunk.mp4"
+            />
+          )}
           {/* Overlay modal for title on mobile */}
           <MobileProjectsTitleModal />
           {/* Desktop layout */}
