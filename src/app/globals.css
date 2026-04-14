@@ -1,3 +1,7 @@
+/* Utility for 3D carousel perspective */
+.perspective-3d {
+  perspective: 1200px;
+}
 /* Typewriter cursor blink */
 .typewriter-cursor {
   display: inline-block;

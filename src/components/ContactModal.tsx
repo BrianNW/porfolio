@@ -43,7 +43,7 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
               value={form.name}
               onChange={handleChange}
               required
-              className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white"
+              className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
             />
             <input
               type="email"
@@ -52,7 +52,7 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
               value={form.email}
               onChange={handleChange}
               required
-              className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white"
+              className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
             />
             <textarea
               name="message"
@@ -60,7 +60,7 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
               value={form.message}
               onChange={handleChange}
               required
-              className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white"
+              className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
               rows={4}
             />
             <button

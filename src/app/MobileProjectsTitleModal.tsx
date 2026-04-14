@@ -6,11 +6,9 @@ export default function MobileProjectsTitleModal() {
     <div
       className={`fixed md:hidden top-0 left-0 w-full h-full z-50 flex items-center justify-center transition-all duration-300 ${open ? '' : 'pointer-events-none opacity-0'}`}
       style={{
-        background: open
-          ? 'rgba(255,255,255,0.10)'
-          : 'transparent',
-        backdropFilter: open ? 'blur(16px)' : undefined,
-        WebkitBackdropFilter: open ? 'blur(16px)' : undefined,
+        background: open ? 'rgba(0,0,0,0.92)' : 'transparent',
+        backdropFilter: undefined,
+        WebkitBackdropFilter: undefined,
       }}
     >
       {open && (

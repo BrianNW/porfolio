@@ -34,7 +34,7 @@ const ArrowProgress: React.FC<ArrowProgressProps> = ({ current, total }) => {
   }, [current]);
 
   return (
-    <div ref={containerRef} className="fixed left-0 bottom-0 w-full h-16 z-50 pointer-events-none">
+    <div ref={containerRef} className="fixed left-0 bottom-6 sm:bottom-0 w-full h-16 z-50 pointer-events-none">
       <div className="relative w-full h-full">
         {/* Sparkle effects */}
         {sparkles.map((s) => (

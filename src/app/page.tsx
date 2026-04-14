@@ -20,7 +20,7 @@ function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted 
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -110,17 +110,17 @@ import PricingCalculatorModal from "../components/PricingCalculatorModal";
 import ArrowProgress from "../components/ArrowProgress";
 import CarouselProjects from "../components/CarouselProjects";
 import VerticalCarouselProjects from "../components/VerticalCarouselProjects";
-import VerticalCarouselServices from "../components/VerticalCarouselServices";
+import DraggableMosaicServices from "../components/DraggableMosaicServices";
 import MobileProjectsTitleModal from "./MobileProjectsTitleModal";
 // import MobileServicesTitleModal from "./MobileServicesTitleModal";
 import { ThemeContext } from "../components/ClientLayout";
 
 // --- 1-column Services section with dismissible title ---
-function ServicesSection1Col() {
+function ServicesSectionMosaic() {
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-4 py-32 mx-auto" style={{ background: 'transparent' }}>
-      <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-8">Services</GlitchTitle>
-      <VerticalCarouselServices />
+    <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-4xl px-4 py-32 mx-auto" style={{ background: 'transparent' }}>
+      <GlitchTitle as="h2" className="mb-8 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center">Services</GlitchTitle>
+      <DraggableMosaicServices />
     </section>
   );
 }
@@ -152,6 +152,14 @@ function PortraitSlideIn() {
 }
 
 export default function Home() {
+    // Animation direction for flip
+    const [direction, setDirection] = useState(0);
+
+    // Handler for flipping between sections
+    function flipToSection(nextIdx: number) {
+      setDirection(nextIdx > current ? 1 : -1);
+      setCurrent(nextIdx);
+    }
   // All state and refs at the very top
   const [current, setCurrent] = useState(0);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -172,58 +180,55 @@ export default function Home() {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
-  useEffect(() => {
-    setTyped("");
-    let index = 0;
-    const interval = setInterval(() => {
-      index++;
-      setTyped(fullText.slice(0, index));
-      if (index >= fullText.length) {
-        clearInterval(interval);
-      }
-    }, 80);
-    return () => clearInterval(interval);
-  }, []);
 
-  // Flip animation direction
-  const [direction, setDirection] = useState(0);
-  const flipToSection = (idx: number) => {
-    setDirection(idx > current ? 1 : -1);
-    setCurrent(idx);
-  };
 
-  // Section definitions (must be after all state/vars and helpers)
   const sections = [
     {
       key: "home",
       content: (
-        <main className="w-full h-screen flex items-stretch bg-white dark:bg-black transition-colors duration-[1200ms] ease-[cubic-bezier(.4,0,.2,1)] min-h-0 absolute top-0 left-0" style={{ background: 'transparent' }}>
-          {/* 2 columns, each 50% width, 100vh height */}
-          <div className="w-1/2 h-full flex items-stretch justify-center bg-white dark:bg-zinc-900 min-h-0">
-            <div className="flex flex-col gap-6 items-center md:items-start text-center md:text-left max-w-lg w-full mr-0 ml-auto h-full min-h-0 justify-center px-5 sm:px-8">
-              <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="max-w-full text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left">
-                {typed}
-                {typed.length < fullText.length && <span className="animate-pulse">|</span>}
-              </GlitchTitle>
-              <div className="w-3/5 md:w-2/5 flex justify-center md:justify-start mt-2 mb-4">
-                <GlitchDivider />
-              </div>
-              <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400 font-normal">
-                I design and develop modern, responsive websites for businesses and individuals. Explore my work, get a quote, or contact me below.
-              </p>
-              <div className="flex flex-col gap-4 text-base font-medium sm:flex-row w-full md:w-auto">
-                <button
-                  className="btn-glitch btn-glass-purple flex h-12 w-full items-center justify-center md:justify-start text-white px-7 transition-colors md:w-[170px]"
-                  onClick={() => setContactOpen(true)}
-                  type="button"
-                >
-                  <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-xl text-center md:text-left whitespace-nowrap w-full">Contact Me</GlitchTitle>
-                </button>
-              </div>
+        <main className="relative flex flex-col md:flex-row items-stretch justify-center min-h-screen w-full bg-white/80 dark:bg-zinc-900/80 overflow-hidden" style={{ background: 'transparent' }}>
+          {/* Left column: animated typewriter and video background in dark mode */}
+            <div className="relative flex flex-col gap-6 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-0 justify-center px-4 md:pl-12 sm:px-6 z-10">
+              {/* Overlay for better text visibility */}
+              <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
+            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
+              <TypewriterText className="whitespace-pre-line">
+                {fullText}
+              </TypewriterText>
+            </GlitchTitle>
+            <div className="relative w-3/5 md:w-2/5 flex justify-center md:justify-start mt-2 mb-4">
+              <GlitchDivider />
             </div>
+            <div className="relative w-full flex flex-col items-center md:items-start">
+              <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
+              <p className="relative z-10 max-w-md text-sm sm:text-base md:text-lg leading-6 text-zinc-600 dark:text-zinc-200 font-mono">
+              I design and develop modern, responsive websites for businesses and individuals. Explore my work, get a quote, or contact me below.
+            </p>
+            </div>
+            <div className="relative flex flex-col gap-4 text-base font-medium sm:flex-row w-full md:w-auto mt-4">
+              <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
+              <button
+                className="relative z-10 btn-glitch btn-glass-purple flex h-12 w-full items-center justify-center md:justify-start text-white px-7 transition-colors md:w-[170px]"
+                onClick={() => setContactOpen(true)}
+                type="button"
+              >
+                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
+              </button>
+            </div>
+            {/* Cyberpunk video background (dark mode only, left column only) */}
+            {isDark && (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover z-0 opacity-60 pointer-events-none rounded-2xl"
+                src="/cyberpunk.mp4"
+              />
+            )}
           </div>
           {/* Right column: portrait */}
-          <div className="w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-0">
+            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-0">
             {/* Blurred, darkened background image */}
             <div className="absolute inset-0 w-full h-full z-0">
               <Image src="/portrait2.jpg" alt="Portrait background" fill className="object-cover w-full h-full blur-2xl brightness-50" priority unoptimized />
@@ -238,9 +243,9 @@ export default function Home() {
     {
       key: "about",
       content: (
-        <section className="flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-white dark:bg-zinc-900 mx-auto" style={{ background: 'transparent' }}>
-          <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-8">About Me</GlitchTitle>
-          <TypewriterText className="text-base md:text-lg lg:text-xl font-normal text-zinc-700 dark:text-zinc-200 text-center max-w-xl" speed={45}>
+        <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
+          <GlitchTitle as="h2" className="relative z-10 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-8">About Me</GlitchTitle>
+          <TypewriterText className="text-lg md:text-xl lg:text-2xl font-mono text-center max-w-xl mt-2 text-zinc-700 dark:text-zinc-200">
             I’m a passionate web developer and designer with a love for crafting beautiful, user-friendly digital experiences. I specialize in building modern, responsive websites that help businesses and individuals stand out online. My approach combines clean design, accessibility, and performance to deliver results you’ll love.
           </TypewriterText>
         </section>
@@ -253,7 +258,7 @@ export default function Home() {
           {/* Overlay modal for title on mobile */}
           <MobileProjectsTitleModal />
           {/* Desktop layout */}
-            <div className="hidden md:flex flex-col justify-center items-center w-full md:w-1/3 pr-0 md:pr-12">
+            <div className="hidden md:flex flex-col justify-center items-center w-full md:w-1/3 pr-0 md:pr-12 bg-black md:bg-transparent">
               {/* <h2 className="section-title-glitch text-left md:text-right mb-0">Past Projects</h2> */}
             {/* Mobile: glass background, Desktop: normal */}
             <GlitchTitle as="h2" glitchClassName="glitch-chromatic" className="title-glass-black md:hidden text-zinc-700 !text-[#18181b] dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-left md:text-right mb-0">Past Projects</GlitchTitle>
@@ -267,15 +272,30 @@ export default function Home() {
     },
     {
       key: "services",
-      content: <ServicesSection1Col />,
+      content: (
+        <section className="relative flex flex-col items-center justify-center min-h-screen w-full px-0 py-32 mx-0 bg-transparent overflow-hidden" style={{ background: 'transparent' }}>
+          {/* Cyberpunk video background (dark mode only) */}
+          {isDark && (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="fixed top-0 left-0 w-screen h-screen object-cover z-0 opacity-60 pointer-events-none"
+              src="/cyberpunk.mp4"
+            />
+          )}
+          <GlitchTitle as="h2" className="relative z-10 mb-8 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center">Services</GlitchTitle>
+          <DraggableMosaicServices />
+        </section>
+      ),
     },
     {
       key: "faq",
       content: (
-        <section className="flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-white dark:bg-zinc-900 mx-auto" style={{ background: 'transparent' }}>
-          {/* <h2 className="section-title-glitch text-center">FAQ</h2> */}
-            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">FAQ</GlitchTitle>
-          <div className="w-full max-w-2xl divide-y divide-zinc-200 dark:divide-zinc-700 rounded-xl overflow-hidden shadow-lg">
+        <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
+          <GlitchTitle as="h2" className="relative z-10 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">FAQ</GlitchTitle>
+          <div className="relative z-10 w-full max-w-2xl divide-y divide-zinc-200 dark:divide-zinc-700 rounded-xl overflow-hidden shadow-lg">
             {[
               {
                 q: 'What services do you offer?',
@@ -300,7 +320,7 @@ export default function Home() {
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   aria-expanded={openFaq === idx}
                 >
-                  <span className="text-2xl font-bold text-[#4c1d95] dark:text-[#a78bfa] text-left">{item.q}</span>
+                  <GlitchTitle as="span" glitchClassName="glitch-chromatic" className="text-2xl font-bold text-left font-mono">{item.q}</GlitchTitle>
                   <span className="ml-4 text-3xl text-[#a78bfa] dark:text-[#4c1d95]">{openFaq === idx ? '−' : '+'}</span>
                 </button>
                 <AnimatePresence initial={false}>
@@ -313,13 +333,13 @@ export default function Home() {
                       className="overflow-hidden px-4 pb-6"
                     >
                       {item.a ? (
-                        <p className="text-lg text-zinc-700 dark:text-zinc-200 font-normal">{item.a}</p>
+                        <p className="text-lg text-zinc-700 dark:text-zinc-200 font-mono">{item.a}</p>
                       ) : (
                         <div className="space-y-4">
-                          <p className="text-lg text-zinc-700 dark:text-zinc-200 font-normal">Pricing is project-based or retainer-based, depending on your needs. Get in touch for a custom quote or use the calculator below.</p>
+                          <p className="text-lg text-zinc-700 dark:text-zinc-200 font-mono">Pricing is project-based or retainer-based, depending on your needs. Get in touch for a custom quote or use the calculator below.</p>
                           <button
                             type="button"
-                            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-10 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] text-black dark:text-white font-medium"
+                            className="flex h-12 w-full items-center justify-center border border-solid border-black/[.08] px-10 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] text-black dark:text-white font-medium"
                             onClick={() => setPricingOpen(true)}
                           >
                             Pricing Calculator
@@ -339,9 +359,9 @@ export default function Home() {
     {
       key: "contact",
       content: (
-        <section id="contact" className="flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-8 py-32 bg-white dark:bg-zinc-900 mx-auto" style={{ background: 'transparent' }}>
+        <section id="contact" className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-8 py-32 bg-transparent mx-auto overflow-hidden">
           {/* <h2 className="section-title-glitch text-center">Contact Me</h2> */}
-            <GlitchTitle as="h2" className="text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">Contact Me</GlitchTitle>
+            <GlitchTitle as="h2" className="relative z-10 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">Contact Me</GlitchTitle>
           {submitted ? (
             <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
           ) : (
@@ -406,7 +426,17 @@ export default function Home() {
         setSubmitted={setSubmitted}
       />
       <div className="relative z-10 min-h-screen w-full bg-white dark:bg-black transition-colors duration-[1200ms] ease-[cubic-bezier(.4,0,.2,1)]">
-        {/* AnimatedBackground is now handled in ClientLayout */}
+        {/* Static cyberpunk video background for About, FAQ, Contact */}
+        {isDark && ["about", "faq", "contact"].includes(sections[current].key) && (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="fixed top-0 left-0 w-screen h-screen object-cover z-0 opacity-60 pointer-events-none"
+            src="/cyberpunk.mp4"
+          />
+        )}
         {/* Persistent cyberpunk glitchy animated progress bar only */}
         <div className="fixed left-0 right-0 bottom-0 z-50 w-full pointer-events-none">
           <ArrowProgress current={current} total={sections.length} />
@@ -416,7 +446,6 @@ export default function Home() {
           <ThemeToggle onThemeChange={setIsDark} />
           <PricingCalculatorModal open={pricingOpen} onClose={() => setPricingOpen(false)} />
         </div>
-        {/* Section navigation arrows */}
         {/* Section navigation arrows: bottom on mobile, side on desktop */}
         <div>
           {/* Mobile: bottom fixed above progress bar */}
