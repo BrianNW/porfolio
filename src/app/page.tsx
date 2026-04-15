@@ -165,6 +165,7 @@ function ContactOverlay({
   );
 }
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import ThemeToggle from "../components/ThemeToggle";
 import PricingCalculatorModal from "../components/PricingCalculatorModal";
 import ArrowProgress from "../components/ArrowProgress";
@@ -177,10 +178,27 @@ import { ThemeContext } from "../components/ClientLayout";
 // Portrait with slide-in animation and larger size
 function PortraitVideo({ className, blurred = false }: { className: string; blurred?: boolean }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
+    if (showFallback) {
+      return;
+    }
+
     let replayTimeout: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
+
+    const playVideo = () => {
+      if (!videoRef.current) {
+        return;
+      }
+
+      void videoRef.current.play().catch(() => {
+        if (!cancelled) {
+          setShowFallback(true);
+        }
+      });
+    };
 
     const scheduleReplay = () => {
       const nextDelay = Math.floor(Math.random() * 4000) + 3000;
@@ -191,14 +209,12 @@ function PortraitVideo({ className, blurred = false }: { className: string; blur
         }
 
         videoRef.current.currentTime = 0;
-        void videoRef.current.play().catch(() => undefined);
+        playVideo();
         scheduleReplay();
       }, nextDelay);
     };
 
-    if (videoRef.current) {
-      void videoRef.current.play().catch(() => undefined);
-    }
+    playVideo();
 
     scheduleReplay();
 
@@ -208,7 +224,34 @@ function PortraitVideo({ className, blurred = false }: { className: string; blur
         clearTimeout(replayTimeout);
       }
     };
-  }, []);
+  }, [showFallback]);
+
+  if (showFallback) {
+    if (blurred) {
+      return (
+        <Image
+          src="/portrait2.jpg"
+          alt="Portrait background"
+          fill
+          className={`${className} blur-2xl brightness-50`.trim()}
+          priority
+          unoptimized
+        />
+      );
+    }
+
+    return (
+      <Image
+        src="/portrait2.jpg"
+        alt="Portrait"
+        width={420}
+        height={420}
+        className={className}
+        priority
+        unoptimized
+      />
+    );
+  }
 
   return (
     <video
@@ -217,6 +260,8 @@ function PortraitVideo({ className, blurred = false }: { className: string; blur
       muted
       playsInline
       preload="auto"
+      poster="/portrait2.jpg"
+      onError={() => setShowFallback(true)}
       className={`${className} ${blurred ? "blur-2xl brightness-50" : ""}`.trim()}
       src="/portrait1.mp4"
     />
@@ -392,7 +437,7 @@ export default function Home() {
             </div>
             <div className="relative w-full flex flex-col items-center md:items-start">
               <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
-              <p className="relative z-10 max-w-md text-base sm:text-base md:text-lg leading-6 text-zinc-600 dark:text-zinc-200 font-mono">
+              <p className="relative z-10 max-w-md text-base sm:text-base md:text-lg lg:text-xl leading-6 lg:leading-7 text-zinc-600 dark:text-zinc-200 font-mono">
               I design and develop modern, responsive websites for businesses and individuals. Explore my work, get a quote, or contact me below.
             </p>
             </div>
