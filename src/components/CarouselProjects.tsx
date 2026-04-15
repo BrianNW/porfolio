@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { withBasePath } from "@/lib/base-path";
 
 const projects = [
   { name: 'Alivio', file: 'alivio.PNG' },
@@ -56,7 +57,7 @@ export default function CarouselProjects() {
           >
             <div className="w-full h-44 rounded-t-2xl overflow-hidden flex items-center justify-center">
               <img
-                src={`/projects/${project.file}`}
+                src={withBasePath(`/projects/${project.file}`)}
                 alt={project.name}
                 className="object-cover w-full h-full"
                 draggable={false}

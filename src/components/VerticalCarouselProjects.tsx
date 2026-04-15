@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { withBasePath } from "@/lib/base-path";
 
 const projects = [
   { name: 'Alivio', file: 'alivio.PNG' },
@@ -137,7 +138,7 @@ export default function VerticalCarouselProjects() {
             style={{ height: itemHeight, minHeight: itemHeight, margin: 0, padding: 0 }}
           >
             <img
-              src={`/projects/${project.file}`}
+              src={withBasePath(`/projects/${project.file}`)}
               alt={project.name}
               className="object-cover w-full h-full block"
               draggable={false}
