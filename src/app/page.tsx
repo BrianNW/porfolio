@@ -173,8 +173,48 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const { isDark, setIsDark } = useContext(ThemeContext);
   const [contactOpen, setContactOpen] = useState(false);
+  const [showArrowCue, setShowArrowCue] = useState(false);
   // Remove containerRef and scroll logic for flip animation
-  const fullText = "Hi, I'm a Web Developer.\nLet's build something amazing together.";
+  const fullText = "I architect digital experiences.\nTogether, let’s translate your vision into a living reality";
+
+  useEffect(() => {
+    let cueTimeout: ReturnType<typeof setTimeout> | null = null;
+    let resetTimeout: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+
+    const scheduleCue = () => {
+      const nextDelay = Math.floor(Math.random() * 4000) + 1000;
+
+      cueTimeout = setTimeout(() => {
+        if (cancelled) {
+          return;
+        }
+
+        setShowArrowCue(true);
+
+        resetTimeout = setTimeout(() => {
+          if (cancelled) {
+            return;
+          }
+
+          setShowArrowCue(false);
+          scheduleCue();
+        }, 850);
+      }, nextDelay);
+    };
+
+    scheduleCue();
+
+    return () => {
+      cancelled = true;
+      if (cueTimeout) {
+        clearTimeout(cueTimeout);
+      }
+      if (resetTimeout) {
+        clearTimeout(resetTimeout);
+      }
+    };
+  }, []);
 
   async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -208,7 +248,7 @@ export default function Home() {
             <div className="relative flex flex-col gap-6 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[60vh] md:min-h-0 justify-center px-4 md:pl-12 sm:px-6 z-10">
               {/* Overlay for better text visibility */}
               <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
-            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
+            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-main-glitch relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
               <TypewriterText className="whitespace-pre-line">
                 {fullText}
               </TypewriterText>
@@ -491,44 +531,52 @@ export default function Home() {
           <div className="fixed bottom-20 left-0 right-0 z-50 flex justify-between items-center px-8 md:hidden pointer-events-none">
             {current > 0 && (
               <button
-                className="p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto"
+                className={`nav-arrow-button p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto ${showArrowCue ? "nav-arrow-cue" : ""}`}
                 style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
                 onClick={() => flipToSection(current - 1)}
                 aria-label="Scroll Left"
               >
-                <span className="text-3xl text-[#a78bfa]">&#8592;</span>
+                <span className={`nav-arrow-shell ${showArrowCue ? "nav-arrow-shell-cue" : ""}`}>
+                  <span className={`nav-arrow-icon text-3xl text-[#a78bfa] ${showArrowCue ? "nav-arrow-icon-cue" : ""}`}>&#8592;</span>
+                </span>
               </button>
             )}
             {current < sections.length - 1 && (
               <button
-                className="p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto"
+                className={`nav-arrow-button p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto ${showArrowCue ? "nav-arrow-cue" : ""}`}
                 style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
                 onClick={() => flipToSection(current + 1)}
                 aria-label="Scroll Right"
               >
-                <span className="text-3xl text-[#a78bfa]">&#8594;</span>
+                <span className={`nav-arrow-shell ${showArrowCue ? "nav-arrow-shell-cue" : ""}`}>
+                  <span className={`nav-arrow-icon text-3xl text-[#a78bfa] ${showArrowCue ? "nav-arrow-icon-cue" : ""}`}>&#8594;</span>
+                </span>
               </button>
             )}
           </div>
           {/* Desktop: side center as before */}
           {current > 0 && (
             <button
-              className="hidden md:block absolute left-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
+              className={`nav-arrow-button hidden md:block absolute left-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition ${showArrowCue ? "nav-arrow-cue" : ""}`}
               style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
               onClick={() => flipToSection(current - 1)}
               aria-label="Scroll Left"
             >
-              <span className="text-3xl text-[#a78bfa]">&#8592;</span>
+              <span className={`nav-arrow-shell ${showArrowCue ? "nav-arrow-shell-cue" : ""}`}>
+                <span className={`nav-arrow-icon text-3xl text-[#a78bfa] ${showArrowCue ? "nav-arrow-icon-cue" : ""}`}>&#8592;</span>
+              </span>
             </button>
           )}
           {current < sections.length - 1 && (
             <button
-              className="hidden md:block absolute right-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition"
+              className={`nav-arrow-button hidden md:block absolute right-16 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition ${showArrowCue ? "nav-arrow-cue" : ""}`}
               style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
               onClick={() => flipToSection(current + 1)}
               aria-label="Scroll Right"
             >
-              <span className="text-3xl text-[#a78bfa]">&#8594;</span>
+              <span className={`nav-arrow-shell ${showArrowCue ? "nav-arrow-shell-cue" : ""}`}>
+                <span className={`nav-arrow-icon text-3xl text-[#a78bfa] ${showArrowCue ? "nav-arrow-icon-cue" : ""}`}>&#8594;</span>
+              </span>
             </button>
           )}
         </div>
@@ -544,11 +592,12 @@ export default function Home() {
               exit={{ rotateY: direction > 0 ? 90 : -90, opacity: 0, transition: { duration: 0.7, ease: [0.4, 0, 0.2, 1] } }}
               style={{ perspective: 1200, backfaceVisibility: "hidden" }}
             >
-              <div className="w-full h-full flex flex-col items-center justify-center" style={{ minWidth: "100vw", minHeight: "100vh" }}>
+              <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden" style={{ minWidth: "100vw", minHeight: "100vh" }}>
                 {sections[current].content}
                 {/* Animated divider during transition */}
                 {current < sections.length - 1 && (
                   <motion.div
+                    className="pointer-events-none absolute bottom-10 left-1/2 z-20 -translate-x-1/2"
                     initial={{ opacity: 0, scaleX: 0.7 }}
                     animate={{ opacity: 1, scaleX: 1 }}
                     exit={{ opacity: 0, scaleX: 0.7 }}

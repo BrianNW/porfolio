@@ -117,6 +117,11 @@ html, body {
   .glitch-chromatic {
     animation: none;
   }
+  .nav-arrow-cue,
+  .nav-arrow-shell-cue,
+  .nav-arrow-icon-cue {
+    animation: none;
+  }
 }
 @keyframes chromatic-aberration {
   0%, 92%, 100% {
@@ -220,6 +225,40 @@ html, body {
   transition: color 0.2s;
   font-weight: 600;
 }
+.nav-arrow-button {
+  transform-style: preserve-3d;
+  will-change: box-shadow, background-color;
+}
+.nav-arrow-shell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+.nav-arrow-icon {
+  display: inline-block;
+  transform-origin: center;
+  will-change: transform, filter;
+}
+.nav-arrow-cue {
+  animation: nav-arrow-pulse-shell 850ms cubic-bezier(.22,.61,.36,1);
+}
+.nav-arrow-shell-cue {
+  animation: nav-arrow-flip-shell 850ms cubic-bezier(.22,.61,.36,1);
+}
+.nav-arrow-icon-cue {
+  animation: nav-arrow-flip-icon 850ms cubic-bezier(.22,.61,.36,1);
+}
+.dark .nav-arrow-cue {
+  animation: nav-arrow-pulse-shell-dark 850ms cubic-bezier(.22,.61,.36,1);
+}
+.dark .nav-arrow-shell-cue {
+  animation: nav-arrow-flip-shell-dark 850ms cubic-bezier(.22,.61,.36,1);
+}
+.dark .nav-arrow-icon-cue {
+  animation: nav-arrow-flip-icon-dark 850ms cubic-bezier(.22,.61,.36,1);
+}
 .btn-glitch:hover, .btn-glitch:focus {
   animation: none;
   color: #18181b;
@@ -228,6 +267,98 @@ html, body {
 .dark .btn-glitch:hover, .dark .btn-glitch:focus {
   color: #fff;
   background: #18181b;
+}
+@keyframes nav-arrow-pulse-shell {
+  0% {
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+  }
+  25% {
+    box-shadow: 0 10px 32px 0 rgba(167,139,250,0.32);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.22), 0 14px 40px 0 rgba(76,29,149,0.28);
+  }
+  100% {
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+  }
+}
+@keyframes nav-arrow-pulse-shell-dark {
+  0% {
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.24);
+  }
+  25% {
+    box-shadow: 0 0 0 2px rgba(0,255,135,0.16), 0 12px 34px 0 rgba(0,255,135,0.18);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.26), 0 16px 44px 0 rgba(0,217,255,0.22);
+  }
+  100% {
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.24);
+  }
+}
+@keyframes nav-arrow-flip-shell {
+  0% {
+    transform: scale(1) rotateZ(0deg);
+  }
+  25% {
+    transform: scale(1.08) rotateZ(-5deg);
+  }
+  50% {
+    transform: scale(1.12) rotateZ(5deg);
+  }
+  100% {
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+@keyframes nav-arrow-flip-shell-dark {
+  0% {
+    transform: scale(1) rotateZ(0deg);
+  }
+  25% {
+    transform: scale(1.08) rotateZ(-5deg);
+  }
+  50% {
+    transform: scale(1.12) rotateZ(5deg);
+  }
+  100% {
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+@keyframes nav-arrow-flip-icon {
+  0% {
+    transform: rotateY(0deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(167,139,250,0));
+  }
+  35% {
+    transform: rotateY(180deg) scale(1.2);
+    filter: drop-shadow(0 0 12px rgba(167,139,250,0.9));
+  }
+  70% {
+    transform: rotateY(360deg) scale(1.08);
+    filter: drop-shadow(0 0 8px rgba(0,217,255,0.8));
+  }
+  100% {
+    transform: rotateY(360deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(167,139,250,0));
+  }
+}
+@keyframes nav-arrow-flip-icon-dark {
+  0% {
+    transform: rotateY(0deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(0,255,135,0));
+  }
+  35% {
+    transform: rotateY(180deg) scale(1.2);
+    filter: drop-shadow(0 0 12px rgba(0,255,135,0.9));
+  }
+  70% {
+    transform: rotateY(360deg) scale(1.08);
+    filter: drop-shadow(0 0 8px rgba(0,217,255,0.85));
+  }
+  100% {
+    transform: rotateY(360deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(0,255,135,0));
+  }
 }
 @keyframes glitch-skew-btn {
   0% {
@@ -361,6 +492,19 @@ html {
     0 2px #a78bfa,
     0 -2px #4c1d95;
 }
+html:not(.dark) .hero-main-glitch.glitch {
+  animation: hero-main-glitch-skew 0.6s cubic-bezier(.25,.46,.45,.94) both;
+  filter:
+    drop-shadow(0 0 14px rgba(0, 217, 255, 0.32))
+    drop-shadow(0 0 10px rgba(255, 71, 87, 0.24))
+    drop-shadow(0 0 8px rgba(255, 107, 157, 0.2));
+  text-shadow:
+    3px 0 var(--glitch-cyan),
+    -3px 0 var(--glitch-red),
+    2px 2px var(--glitch-pink),
+    -2px -2px var(--glitch-green),
+    0 3px var(--glitch-yellow);
+}
 @keyframes glitch-skew {
   0% {
     transform: skew(0deg, 0deg) scale(1);
@@ -396,6 +540,66 @@ html {
     transform: skew(0deg, 0deg) scale(1);
     opacity: 1;
     text-shadow: 2px 0 #a78bfa, -2px 0 #4c1d95, 0 2px #a78bfa, 0 -2px #4c1d95;
+  }
+}
+@keyframes hero-main-glitch-skew {
+  0% {
+    transform: skew(0deg, 0deg) scale(1);
+    opacity: 1;
+    text-shadow:
+      3px 0 var(--glitch-cyan),
+      -3px 0 var(--glitch-red),
+      2px 2px var(--glitch-pink),
+      -2px -2px var(--glitch-green),
+      0 3px var(--glitch-yellow);
+  }
+  12% {
+    transform: skew(-2deg, 1deg) scale(1.015);
+    opacity: 0.84;
+    text-shadow:
+      6px 0 var(--glitch-cyan),
+      -6px 0 var(--glitch-red),
+      4px 3px var(--glitch-pink),
+      -4px -3px var(--glitch-green),
+      0 5px var(--glitch-yellow);
+  }
+  26% {
+    transform: skew(2deg, -1deg) scale(0.99);
+    opacity: 0.92;
+    text-shadow:
+      3px 3px var(--glitch-pink),
+      -3px -3px var(--glitch-cyan),
+      2px -2px var(--glitch-yellow),
+      -2px 2px var(--glitch-green);
+  }
+  42% {
+    transform: skew(-1deg, 2deg) scale(1.02);
+    opacity: 0.8;
+    text-shadow:
+      7px 0 var(--glitch-cyan),
+      -7px 0 var(--glitch-red),
+      5px 4px var(--glitch-pink),
+      -5px -4px var(--glitch-green),
+      0 6px var(--glitch-yellow);
+  }
+  58% {
+    transform: skew(1deg, -2deg) scale(1.01);
+    opacity: 0.94;
+    text-shadow:
+      3px -3px var(--glitch-cyan),
+      -3px 3px var(--glitch-red),
+      2px 2px var(--glitch-yellow),
+      -2px -2px var(--glitch-pink);
+  }
+  100% {
+    transform: skew(0deg, 0deg) scale(1);
+    opacity: 1;
+    text-shadow:
+      3px 0 var(--glitch-cyan),
+      -3px 0 var(--glitch-red),
+      2px 2px var(--glitch-pink),
+      -2px -2px var(--glitch-green),
+      0 3px var(--glitch-yellow);
   }
 }
 /* Custom scrollbar for projects section */
