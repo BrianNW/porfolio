@@ -10,6 +10,7 @@ import {
   fetchContactCaptchaChallenge,
   submitContactForm,
 } from "@/lib/contact";
+import { withBasePath } from "@/lib/base-path";
 
 
 import { useState, useEffect, useContext, useRef } from "react";
@@ -230,7 +231,7 @@ function PortraitVideo({ className, blurred = false }: { className: string; blur
     if (blurred) {
       return (
         <Image
-          src="/portrait2.jpg"
+          src={withBasePath("/portrait2.jpg")}
           alt="Portrait background"
           fill
           className={`${className} blur-2xl brightness-50`.trim()}
@@ -242,7 +243,7 @@ function PortraitVideo({ className, blurred = false }: { className: string; blur
 
     return (
       <Image
-        src="/portrait2.jpg"
+        src={withBasePath("/portrait2.jpg")}
         alt="Portrait"
         width={420}
         height={420}
@@ -260,10 +261,10 @@ function PortraitVideo({ className, blurred = false }: { className: string; blur
       muted
       playsInline
       preload="auto"
-      poster="/portrait2.jpg"
+      poster={withBasePath("/portrait2.jpg")}
       onError={() => setShowFallback(true)}
       className={`${className} ${blurred ? "blur-2xl brightness-50" : ""}`.trim()}
-      src="/portrait1.mp4"
+      src={withBasePath("/portrait1.mp4")}
     />
   );
 }
@@ -459,7 +460,7 @@ export default function Home() {
                 muted
                 playsInline
                 className="absolute inset-0 w-full h-full object-cover z-0 opacity-60 pointer-events-none rounded-2xl"
-                src="/cyberpunk.mp4"
+                src={withBasePath("/cyberpunk.mp4")}
               />
             )}
           </div>
@@ -499,7 +500,7 @@ export default function Home() {
               muted
               playsInline
               className="fixed top-0 left-0 w-screen h-screen object-cover z-0 opacity-60 pointer-events-none"
-              src="/cyberpunk.mp4"
+              src={withBasePath("/cyberpunk.mp4")}
             />
           )}
           {/* Overlay modal for title on mobile */}
@@ -529,7 +530,7 @@ export default function Home() {
               muted
               playsInline
               className="fixed top-0 left-0 w-screen h-screen object-cover z-0 opacity-60 pointer-events-none"
-              src="/cyberpunk.mp4"
+              src={withBasePath("/cyberpunk.mp4")}
             />
           )}
           <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 mb-8 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center">Services</GlitchTitle>
@@ -729,7 +730,7 @@ export default function Home() {
             muted
             playsInline
             className="fixed top-0 left-0 w-screen h-screen object-cover z-0 opacity-60 pointer-events-none"
-            src="/cyberpunk.mp4"
+            src={withBasePath("/cyberpunk.mp4")}
           />
         )}
         {/* Persistent cyberpunk glitchy animated progress bar only */}

@@ -1,3 +1,5 @@
+import { withBasePath } from "@/lib/base-path";
+
 export type ContactFormPayload = {
   name: string;
   email: string;
@@ -162,7 +164,7 @@ export async function fetchContactCaptchaChallenge() {
     return createClientCaptchaChallenge();
   }
 
-  const response = await fetch("/api/contact", {
+  const response = await fetch(withBasePath("/api/contact"), {
     method: "GET",
     cache: "no-store",
   });
@@ -192,7 +194,7 @@ export async function submitContactForm(payload: ContactSubmissionPayload) {
     return;
   }
 
-  const response = await fetch("/api/contact", {
+  const response = await fetch(withBasePath("/api/contact"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

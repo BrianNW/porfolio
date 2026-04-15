@@ -649,17 +649,7 @@ html:not(.dark) .hero-main-glitch.glitch {
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Oakes Grotesk';
-  src: url('/fonts/OakesGrotesk-SemiBold.woff2') format('woff2'),
-       url('/fonts/OakesGrotesk-SemiBold.woff') format('woff');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
 html, body {
-  font-family: 'Oakes Grotesk', Arial, sans-serif;
   font-weight: 600;
 }
 
