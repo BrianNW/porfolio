@@ -20,6 +20,33 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Contact Form Email Setup
+
+The contact form now sends mail through an SMTP server from the Next.js app route at `src/app/api/contact/route.ts`.
+
+1. Copy `.env.example` to `.env.local`.
+2. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS` for your mail provider.
+3. Set `CONTACT_TO_EMAIL` to the inbox that should receive portfolio inquiries.
+4. Set `CONTACT_FROM_EMAIL` to the sender address your SMTP provider allows.
+
+Use these variables in `.env.local`:
+
+```env
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=mailer@example.com
+SMTP_PASS=replace-with-your-smtp-password
+CONTACT_TO_EMAIL=you@example.com
+CONTACT_FROM_EMAIL=mailer@example.com
+```
+
+`CONTACT_TO_EMAIL` is the inbox that receives the message.
+`CONTACT_FROM_EMAIL` must be a sender address your SMTP provider accepts.
+If your provider does not require authentication, leave both `SMTP_USER` and `SMTP_PASS` unset.
+
+If any of those values are missing or incorrect, the form will fail and the UI will show the returned error message instead of pretending the email was sent.
+
 ## Using Oakes Grotesk Semi Bold as the Site Font
 
 This project is configured to use the Oakes Grotesk Semi Bold font as the default site font. **You must provide the web font files** (WOFF/WOFF2) due to licensing restrictions. Follow these steps:

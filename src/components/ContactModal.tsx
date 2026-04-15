@@ -1,22 +1,39 @@
 "use client";
 import { useState } from "react";
 
+import { emptyContactForm, submitContactForm } from "@/lib/contact";
+
 export default function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState(emptyContactForm);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setForm({ name: "", email: "", message: "" });
-      setSubmitted(false);
-      onClose();
-    }, 1500);
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await submitContactForm(form);
+      setSubmitted(true);
+      setForm(emptyContactForm);
+      setTimeout(() => {
+        setSubmitted(false);
+        onClose();
+      }, 1500);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Unable to send your message right now."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!open) return null;
@@ -36,12 +53,18 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
           <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {submitError ? (
+              <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-950/40 dark:text-red-200">
+                {submitError}
+              </div>
+            ) : null}
             <input
               type="text"
               name="name"
               placeholder="Your Name"
               value={form.name}
               onChange={handleChange}
+              disabled={isSubmitting}
               required
               className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
             />
@@ -51,6 +74,7 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
               placeholder="Your Email"
               value={form.email}
               onChange={handleChange}
+              disabled={isSubmitting}
               required
               className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
             />
@@ -59,15 +83,17 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
               placeholder="Your Message"
               value={form.message}
               onChange={handleChange}
+              disabled={isSubmitting}
               required
               className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
               rows={4}
             />
             <button
               type="submit"
+              disabled={isSubmitting}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition"
             >
-              Send
+              {isSubmitting ? "Sending..." : "Send"}
             </button>
           </form>
         )}

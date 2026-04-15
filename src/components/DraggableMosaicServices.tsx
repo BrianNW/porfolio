@@ -108,14 +108,14 @@ export default function DraggableMosaicServices() {
         drag
         dragConstraints={constraintsRef}
         dragElastic={0.2}
-        className="grid grid-cols-3 grid-rows-2 gap-0 w-full h-[60vh]"
+        className="grid grid-cols-2 md:grid-cols-3 grid-rows-3 gap-0 w-full h-[60vh]"
         style={{ touchAction: 'none', cursor: 'grab' }}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}
       >
-        {/* Card 1: UI/UX Design (large, spans 2 rows) */}
+        {/* Card 1: UI/UX Design */}
         <div
-          className="row-span-2 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(0); setClickedGlitch(0); }}
         >
           <GlitchTitle
@@ -126,9 +126,9 @@ export default function DraggableMosaicServices() {
             {services[0].title}
           </GlitchTitle>
         </div>
-        {/* Card 2: Web Development (top right, wide) */}
+        {/* Card 2: Web Development */}
         <div
-          className="row-span-1 col-span-2 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(1); setClickedGlitch(1); }}
         >
           <GlitchTitle
@@ -139,9 +139,9 @@ export default function DraggableMosaicServices() {
             {services[1].title}
           </GlitchTitle>
         </div>
-        {/* Card 3: Consulting (bottom center) */}
+        {/* Card 3: Consulting */}
         <div
-          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(2); setClickedGlitch(2); }}
         >
           <GlitchTitle
@@ -152,9 +152,9 @@ export default function DraggableMosaicServices() {
             {services[2].title}
           </GlitchTitle>
         </div>
-        {/* Card 4: SEO (bottom right) */}
+        {/* Card 4: SEO */}
         <div
-          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(3); setClickedGlitch(3); }}
         >
           <GlitchTitle
@@ -166,9 +166,9 @@ export default function DraggableMosaicServices() {
           </GlitchTitle>
         </div>
 
-        {/* Card 5: White Label (bottom left) */}
+        {/* Card 5: White Label */}
         <div
-          className="row-span-1 col-span-1 flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
           onClick={() => { setOpenIdx(4); setClickedGlitch(4); }}
         >
           <GlitchTitle

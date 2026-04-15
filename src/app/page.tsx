@@ -4,17 +4,29 @@
 import GlitchDivider from "../components/GlitchDivider";
 import GlitchTitle from "../components/GlitchTitle";
 import TypewriterText from "../components/TypewriterText";
+import { emptyContactForm, submitContactForm } from "@/lib/contact";
 
 
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 
-function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted }: {
+function ContactOverlay({
+  open,
+  onClose,
+  form,
+  setForm,
+  submitted,
+  submitError,
+  isSubmitting,
+  onSubmit,
+}: {
   open: boolean;
   onClose: () => void;
   form: { name: string; email: string; message: string };
   setForm: React.Dispatch<React.SetStateAction<{ name: string; email: string; message: string }>>;
   submitted: boolean;
-  setSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+  submitError: string | null;
+  isSubmitting: boolean;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   return (
     <AnimatePresence>
@@ -44,17 +56,14 @@ function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted 
                 <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
               ) : (
                 <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                    setSubmitted(true);
-                    setTimeout(() => {
-                      setForm({ name: "", email: "", message: "" });
-                      setSubmitted(false);
-                      onClose();
-                    }, 1500);
-                  }}
+                  onSubmit={onSubmit}
                   className="flex flex-col gap-4 w-full"
                 >
+                  {submitError ? (
+                    <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-950/40 dark:text-red-200">
+                      {submitError}
+                    </div>
+                  ) : null}
                   <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Name
                     <input
                       type="text"
@@ -62,6 +71,7 @@ function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted 
                       placeholder="Your Name"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                      disabled={isSubmitting}
                       required
                       className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-1 w-full"
                     />
@@ -73,6 +83,7 @@ function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted 
                       placeholder="Your Email"
                       value={form.email}
                       onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                      disabled={isSubmitting}
                       required
                       className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-1 w-full"
                     />
@@ -83,6 +94,7 @@ function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted 
                       placeholder="Your Message"
                       value={form.message}
                       onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                      disabled={isSubmitting}
                       required
                       className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-1 w-full"
                       rows={4}
@@ -90,9 +102,10 @@ function ContactOverlay({ open, onClose, form, setForm, submitted, setSubmitted 
                   </label>
                   <button
                     type="submit"
+                    disabled={isSubmitting}
                     className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-white font-semibold py-2 transition"
                   >
-                    Send
+                    {isSubmitting ? "Sending..." : "Send"}
                   </button>
                 </form>
               )}
@@ -108,22 +121,11 @@ import Image from "next/image";
 import ThemeToggle from "../components/ThemeToggle";
 import PricingCalculatorModal from "../components/PricingCalculatorModal";
 import ArrowProgress from "../components/ArrowProgress";
-import CarouselProjects from "../components/CarouselProjects";
 import VerticalCarouselProjects from "../components/VerticalCarouselProjects";
 import DraggableMosaicServices from "../components/DraggableMosaicServices";
 import MobileProjectsTitleModal from "./MobileProjectsTitleModal";
 // import MobileServicesTitleModal from "./MobileServicesTitleModal";
 import { ThemeContext } from "../components/ClientLayout";
-
-// --- 1-column Services section with dismissible title ---
-function ServicesSectionMosaic() {
-  return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-4xl px-4 py-32 mx-auto" style={{ background: 'transparent' }}>
-      <GlitchTitle as="h2" className="mb-8 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center">Services</GlitchTitle>
-      <DraggableMosaicServices />
-    </section>
-  );
-}
 
 // Portrait with slide-in animation and larger size
 function PortraitSlideIn() {
@@ -162,8 +164,10 @@ export default function Home() {
     }
   // All state and refs at the very top
   const [current, setCurrent] = useState(0);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState(emptyContactForm);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [pricingOpen, setPricingOpen] = useState(false);
   // FAQ accordion state: index of open item, or null
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -171,15 +175,28 @@ export default function Home() {
   const [contactOpen, setContactOpen] = useState(false);
   // Remove containerRef and scroll logic for flip animation
   const fullText = "Hi, I'm a Web Developer.\nLet's build something amazing together.";
-  const [typed, setTyped] = useState("");
-  const [glitch, setGlitch] = useState(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setGlitch(true);
-      setTimeout(() => setGlitch(false), 600);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+
+  async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await submitContactForm(form);
+      setSubmitted(true);
+      setForm(emptyContactForm);
+      setTimeout(() => {
+        setSubmitted(false);
+        setContactOpen(false);
+      }, 1500);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Unable to send your message right now."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
 
   const sections = [
@@ -201,7 +218,7 @@ export default function Home() {
             </div>
             <div className="relative w-full flex flex-col items-center md:items-start">
               <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
-              <p className="relative z-10 max-w-md text-sm sm:text-base md:text-lg leading-6 text-zinc-600 dark:text-zinc-200 font-mono">
+              <p className="relative z-10 max-w-md text-base sm:text-base md:text-lg leading-6 text-zinc-600 dark:text-zinc-200 font-mono">
               I design and develop modern, responsive websites for businesses and individuals. Explore my work, get a quote, or contact me below.
             </p>
             </div>
@@ -272,7 +289,7 @@ export default function Home() {
             <div className="hidden md:flex flex-col justify-center items-center w-full md:w-1/3 pr-0 md:pr-12 bg-black md:bg-transparent">
               {/* <h2 className="section-title-glitch text-left md:text-right mb-0">Past Projects</h2> */}
             {/* Mobile: glass background, Desktop: normal */}
-            <GlitchTitle as="h2" glitchClassName="glitch-chromatic" className="title-glass-black md:hidden text-zinc-700 !text-[#18181b] dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-left md:text-right mb-0">Past Projects</GlitchTitle>
+            <GlitchTitle as="h2" glitchClassName="glitch-chromatic" className="md:hidden text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-left md:text-right mb-0">Past Projects</GlitchTitle>
             <GlitchTitle as="h2" className="hidden md:inline-block text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-left md:text-right mb-0">Past Projects</GlitchTitle>
           </div>
           <div className="flex-1 h-full flex items-center">
@@ -376,7 +393,12 @@ export default function Home() {
           {submitted ? (
             <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
           ) : (
-            <form onSubmit={e => { e.preventDefault(); setSubmitted(true); setTimeout(() => { setForm({ name: "", email: "", message: "" }); setSubmitted(false); }, 1500); }} className="flex flex-col gap-4 w-full">
+            <form onSubmit={handleContactSubmit} className="flex flex-col gap-4 w-full">
+              {submitError ? (
+                <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-950/40 dark:text-red-200">
+                  {submitError}
+                </div>
+              ) : null}
               <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Name
                 <input
                   type="text"
@@ -384,6 +406,7 @@ export default function Home() {
                   placeholder="Your Name"
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  disabled={isSubmitting}
                   required
                   className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-1 w-full"
                 />
@@ -395,6 +418,7 @@ export default function Home() {
                   placeholder="Your Email"
                   value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  disabled={isSubmitting}
                   required
                   className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-1 w-full"
                 />
@@ -405,6 +429,7 @@ export default function Home() {
                   placeholder="Your Message"
                   value={form.message}
                   onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                  disabled={isSubmitting}
                   required
                   className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-1 w-full"
                   rows={4}
@@ -412,9 +437,10 @@ export default function Home() {
               </label>
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-white font-semibold py-2 rounded transition"
               >
-                Send
+                {isSubmitting ? "Sending..." : "Send"}
               </button>
             </form>
           )}
@@ -434,7 +460,9 @@ export default function Home() {
         form={form}
         setForm={setForm}
         submitted={submitted}
-        setSubmitted={setSubmitted}
+        submitError={submitError}
+        isSubmitting={isSubmitting}
+        onSubmit={handleContactSubmit}
       />
       <div className="relative z-10 min-h-screen w-full bg-white dark:bg-black transition-colors duration-[1200ms] ease-[cubic-bezier(.4,0,.2,1)]">
         {/* Static cyberpunk video background for About, FAQ, Contact */}
