@@ -505,6 +505,12 @@ html:not(.dark) .hero-main-glitch.glitch {
     -2px -2px var(--glitch-green),
     0 3px var(--glitch-yellow);
 }
+@media (min-width: 768px) and (max-width: 1100px) {
+  .hero-home-title {
+    font-size: 3.125rem !important;
+    line-height: 1.05 !important;
+  }
+}
 @keyframes glitch-skew {
   0% {
     transform: skew(0deg, 0deg) scale(1);

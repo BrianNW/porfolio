@@ -4,10 +4,25 @@ export type ContactFormPayload = {
   message: string;
 };
 
+export type ContactCaptchaChallenge = {
+  prompt: string;
+  token: string;
+};
+
+export type ContactSubmissionPayload = ContactFormPayload & {
+  captchaAnswer: string;
+  captchaToken: string;
+};
+
 export const emptyContactForm: ContactFormPayload = {
   name: "",
   email: "",
   message: "",
+};
+
+export const emptyContactCaptcha: ContactCaptchaChallenge = {
+  prompt: "",
+  token: "",
 };
 
 function normalizeField(value: unknown) {
@@ -59,7 +74,57 @@ export function parseContactFormPayload(payload: unknown):
   };
 }
 
-export async function submitContactForm(payload: ContactFormPayload) {
+export function parseContactSubmissionPayload(payload: unknown):
+  | { data: ContactSubmissionPayload }
+  | { error: string } {
+  const parsedForm = parseContactFormPayload(payload);
+
+  if ("error" in parsedForm) {
+    return parsedForm;
+  }
+
+  const record = payload as Record<string, unknown>;
+  const captchaAnswer = normalizeField(record.captchaAnswer);
+  const captchaToken = normalizeField(record.captchaToken);
+
+  if (!captchaAnswer || !captchaToken) {
+    return { error: "Complete the captcha before sending your message." };
+  }
+
+  if (captchaAnswer.length > 32 || captchaToken.length > 500) {
+    return { error: "Captcha verification failed. Please try again." };
+  }
+
+  return {
+    data: {
+      ...parsedForm.data,
+      captchaAnswer,
+      captchaToken,
+    },
+  };
+}
+
+export async function fetchContactCaptchaChallenge() {
+  const response = await fetch("/api/contact", {
+    method: "GET",
+    cache: "no-store",
+  });
+
+  const result = (await response.json().catch(() => null)) as
+    | ({ error?: string } & Partial<ContactCaptchaChallenge>)
+    | null;
+
+  if (!response.ok || !result?.prompt || !result?.token) {
+    throw new Error(result?.error || "Unable to load captcha right now.");
+  }
+
+  return {
+    prompt: result.prompt,
+    token: result.token,
+  } satisfies ContactCaptchaChallenge;
+}
+
+export async function submitContactForm(payload: ContactSubmissionPayload) {
   const response = await fetch("/api/contact", {
     method: "POST",
     headers: {

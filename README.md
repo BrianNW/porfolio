@@ -28,6 +28,7 @@ The contact form now sends mail through an SMTP server from the Next.js app rout
 2. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS` for your mail provider.
 3. Set `CONTACT_TO_EMAIL` to the inbox that should receive portfolio inquiries.
 4. Set `CONTACT_FROM_EMAIL` to the sender address your SMTP provider allows.
+5. Set `CONTACT_CAPTCHA_SECRET` to any long random string so the built-in captcha token can be signed securely.
 
 Use these variables in `.env.local`:
 
@@ -39,11 +40,13 @@ SMTP_USER=mailer@example.com
 SMTP_PASS=replace-with-your-smtp-password
 CONTACT_TO_EMAIL=you@example.com
 CONTACT_FROM_EMAIL=mailer@example.com
+CONTACT_CAPTCHA_SECRET=replace-with-a-long-random-secret
 ```
 
 `CONTACT_TO_EMAIL` is the inbox that receives the message.
 `CONTACT_FROM_EMAIL` must be a sender address your SMTP provider accepts.
 If your provider does not require authentication, leave both `SMTP_USER` and `SMTP_PASS` unset.
+`CONTACT_CAPTCHA_SECRET` is used to sign the simple math captcha served by the contact form API.
 
 If any of those values are missing or incorrect, the form will fail and the UI will show the returned error message instead of pretending the email was sent.
 

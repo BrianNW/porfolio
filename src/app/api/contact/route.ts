@@ -1,9 +1,17 @@
+import { createHmac, randomInt, randomUUID, timingSafeEqual } from "node:crypto";
+
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 
-import { parseContactFormPayload } from "@/lib/contact";
+import { parseContactSubmissionPayload } from "@/lib/contact";
 
 export const runtime = "nodejs";
+
+type CaptchaTokenPayload = {
+  answer: number;
+  exp: number;
+  nonce: string;
+};
 
 function getMailerConfig() {
   const host = process.env.SMTP_HOST;
@@ -48,12 +56,95 @@ function escapeHtml(value: string) {
     .replace(/'/g, "&#39;");
 }
 
+function getCaptchaSecret() {
+  return process.env.CONTACT_CAPTCHA_SECRET || process.env.SMTP_PASS || "development-contact-captcha-secret";
+}
+
+function signCaptchaPayload(encodedPayload: string) {
+  return createHmac("sha256", getCaptchaSecret()).update(encodedPayload).digest("base64url");
+}
+
+function createCaptchaChallenge() {
+  const useAddition = randomInt(0, 2) === 0;
+  let left = randomInt(2, 10);
+  let right = randomInt(1, 10);
+
+  if (!useAddition && right > left) {
+    [left, right] = [right, left];
+  }
+
+  const answer = useAddition ? left + right : left - right;
+  const payload: CaptchaTokenPayload = {
+    answer,
+    exp: Date.now() + 10 * 60 * 1000,
+    nonce: randomUUID(),
+  };
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const signature = signCaptchaPayload(encodedPayload);
+
+  return {
+    prompt: `What is ${left} ${useAddition ? "+" : "-"} ${right}?`,
+    token: `${encodedPayload}.${signature}`,
+  };
+}
+
+function verifyCaptchaToken(token: string, answer: string) {
+  const [encodedPayload, providedSignature] = token.split(".");
+
+  if (!encodedPayload || !providedSignature) {
+    return { error: "Captcha verification failed. Please try again." };
+  }
+
+  const expectedSignature = signCaptchaPayload(encodedPayload);
+  const providedBuffer = Buffer.from(providedSignature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+
+  if (
+    providedBuffer.length !== expectedBuffer.length ||
+    !timingSafeEqual(providedBuffer, expectedBuffer)
+  ) {
+    return { error: "Captcha verification failed. Please try again." };
+  }
+
+  let payload: CaptchaTokenPayload;
+
+  try {
+    payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8")) as CaptchaTokenPayload;
+  } catch {
+    return { error: "Captcha verification failed. Please try again." };
+  }
+
+  if (typeof payload.answer !== "number" || typeof payload.exp !== "number" || payload.exp < Date.now()) {
+    return { error: "Captcha expired. Please try again." };
+  }
+
+  if (String(payload.answer) !== answer.trim()) {
+    return { error: "Captcha verification failed. Please try again." };
+  }
+
+  return { ok: true };
+}
+
+export async function GET() {
+  return NextResponse.json(createCaptchaChallenge(), {
+    headers: {
+      "Cache-Control": "no-store, max-age=0",
+    },
+  });
+}
+
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
-  const parsed = parseContactFormPayload(payload);
+  const parsed = parseContactSubmissionPayload(payload);
 
   if ("error" in parsed) {
     return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+
+  const captchaCheck = verifyCaptchaToken(parsed.data.captchaToken, parsed.data.captchaAnswer);
+
+  if ("error" in captchaCheck) {
+    return NextResponse.json({ error: captchaCheck.error }, { status: 400 });
   }
 
   const mailer = getMailerConfig();

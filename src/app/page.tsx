@@ -4,10 +4,15 @@
 import GlitchDivider from "../components/GlitchDivider";
 import GlitchTitle from "../components/GlitchTitle";
 import TypewriterText from "../components/TypewriterText";
-import { emptyContactForm, submitContactForm } from "@/lib/contact";
+import {
+  emptyContactCaptcha,
+  emptyContactForm,
+  fetchContactCaptchaChallenge,
+  submitContactForm,
+} from "@/lib/contact";
 
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 
 function ContactOverlay({
   open,
@@ -16,6 +21,12 @@ function ContactOverlay({
   setForm,
   submitted,
   submitError,
+  captcha,
+  captchaAnswer,
+  setCaptchaAnswer,
+  isCaptchaLoading,
+  captchaError,
+  onRefreshCaptcha,
   isSubmitting,
   onSubmit,
 }: {
@@ -25,6 +36,12 @@ function ContactOverlay({
   setForm: React.Dispatch<React.SetStateAction<{ name: string; email: string; message: string }>>;
   submitted: boolean;
   submitError: string | null;
+  captcha: { prompt: string; token: string };
+  captchaAnswer: string;
+  setCaptchaAnswer: React.Dispatch<React.SetStateAction<string>>;
+  isCaptchaLoading: boolean;
+  captchaError: string | null;
+  onRefreshCaptcha: () => Promise<void>;
   isSubmitting: boolean;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
@@ -100,9 +117,40 @@ function ContactOverlay({
                       rows={4}
                     />
                   </label>
+                  <div className="grid grid-cols-[1fr_auto] items-end gap-3">
+                    <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check
+                      <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
+                        {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
+                      </span>
+                      <input
+                        type="text"
+                        name="captchaAnswer"
+                        inputMode="numeric"
+                        placeholder="Answer"
+                        value={captchaAnswer}
+                        onChange={event => setCaptchaAnswer(event.target.value)}
+                        disabled={isSubmitting || isCaptchaLoading || !captcha.token}
+                        required
+                        className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-2 w-full"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => void onRefreshCaptcha()}
+                      disabled={isSubmitting || isCaptchaLoading}
+                      className="border px-3 py-2 text-sm text-black transition hover:bg-black/[.04] dark:text-white dark:hover:bg-white/[.08]"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                  {captchaError ? (
+                    <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-200">
+                      {captchaError}
+                    </div>
+                  ) : null}
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isCaptchaLoading || !captcha.token}
                     className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-white font-semibold py-2 transition"
                   >
                     {isSubmitting ? "Sending..." : "Send"}
@@ -117,7 +165,6 @@ function ContactOverlay({
   );
 }
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
 import ThemeToggle from "../components/ThemeToggle";
 import PricingCalculatorModal from "../components/PricingCalculatorModal";
 import ArrowProgress from "../components/ArrowProgress";
@@ -128,6 +175,54 @@ import MobileProjectsTitleModal from "./MobileProjectsTitleModal";
 import { ThemeContext } from "../components/ClientLayout";
 
 // Portrait with slide-in animation and larger size
+function PortraitVideo({ className, blurred = false }: { className: string; blurred?: boolean }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    let replayTimeout: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+
+    const scheduleReplay = () => {
+      const nextDelay = Math.floor(Math.random() * 4000) + 3000;
+
+      replayTimeout = setTimeout(() => {
+        if (cancelled || !videoRef.current) {
+          return;
+        }
+
+        videoRef.current.currentTime = 0;
+        void videoRef.current.play().catch(() => undefined);
+        scheduleReplay();
+      }, nextDelay);
+    };
+
+    if (videoRef.current) {
+      void videoRef.current.play().catch(() => undefined);
+    }
+
+    scheduleReplay();
+
+    return () => {
+      cancelled = true;
+      if (replayTimeout) {
+        clearTimeout(replayTimeout);
+      }
+    };
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      muted
+      playsInline
+      preload="auto"
+      className={`${className} ${blurred ? "blur-2xl brightness-50" : ""}`.trim()}
+      src="/portrait1.mp4"
+    />
+  );
+}
+
 function PortraitSlideIn() {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -138,16 +233,8 @@ function PortraitSlideIn() {
     <div
       className={`flex flex-col items-center justify-center transition-transform duration-1000 ease-out ${visible ? 'translate-x-0 opacity-100' : '-translate-x-32 opacity-0'}`}
     >
-      <div className="relative rounded-full ring-4 ring-[#a78bfa33] border border-[#a78bfa22] bg-white/10 dark:bg-zinc-900/10 backdrop-blur-md shadow-xl portrait-glow">
-        <Image
-          src="/portrait2.jpg"
-          alt="Portrait"
-          width={420}
-          height={420}
-          className="object-cover rounded-full w-56 h-56 md:w-[420px] md:h-[420px]"
-          priority
-          unoptimized
-        />
+      <div className="relative overflow-hidden rounded-full ring-4 ring-[#a78bfa33] border border-[#a78bfa22] bg-white/10 dark:bg-zinc-900/10 backdrop-blur-md shadow-xl portrait-glow">
+        <PortraitVideo className="object-cover rounded-full scale-125 w-56 h-56 md:w-[420px] md:h-[420px]" />
       </div>
     </div>
   );
@@ -168,6 +255,10 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [captcha, setCaptcha] = useState(emptyContactCaptcha);
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [isCaptchaLoading, setIsCaptchaLoading] = useState(false);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
   const [pricingOpen, setPricingOpen] = useState(false);
   // FAQ accordion state: index of open item, or null
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -216,23 +307,66 @@ export default function Home() {
     };
   }, []);
 
+  const refreshCaptcha = async () => {
+    setIsCaptchaLoading(true);
+    setCaptchaError(null);
+
+    try {
+      const challenge = await fetchContactCaptchaChallenge();
+      setCaptcha(challenge);
+    } catch (error) {
+      setCaptcha(emptyContactCaptcha);
+      setCaptchaError(
+        error instanceof Error ? error.message : "Unable to load captcha right now."
+      );
+    } finally {
+      setIsCaptchaLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      void refreshCaptcha();
+    }, 0);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!captcha.token) {
+      setSubmitError("Captcha is still loading. Please try again in a moment.");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError(null);
 
     try {
-      await submitContactForm(form);
+      await submitContactForm({
+        ...form,
+        captchaAnswer,
+        captchaToken: captcha.token,
+      });
       setSubmitted(true);
       setForm(emptyContactForm);
+      setCaptchaAnswer("");
+      void refreshCaptcha();
       setTimeout(() => {
         setSubmitted(false);
         setContactOpen(false);
       }, 1500);
     } catch (error) {
-      setSubmitError(
-        error instanceof Error ? error.message : "Unable to send your message right now."
-      );
+      const message =
+        error instanceof Error ? error.message : "Unable to send your message right now.";
+
+      setSubmitError(message);
+
+      if (/captcha/i.test(message)) {
+        setCaptchaAnswer("");
+        void refreshCaptcha();
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -248,7 +382,7 @@ export default function Home() {
             <div className="relative flex flex-col gap-6 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[60vh] md:min-h-0 justify-center px-4 md:pl-12 sm:px-6 z-10">
               {/* Overlay for better text visibility */}
               <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
-            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-main-glitch relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
+            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-home-title hero-main-glitch relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
               <TypewriterText className="whitespace-pre-line">
                 {fullText}
               </TypewriterText>
@@ -288,7 +422,7 @@ export default function Home() {
             <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[40vh] md:min-h-0">
             {/* Blurred, darkened background image */}
             <div className="absolute inset-0 w-full h-full z-0">
-              <Image src="/portrait2.jpg" alt="Portrait background" fill className="object-cover w-full h-full blur-2xl brightness-50" priority unoptimized />
+              <PortraitVideo className="object-cover w-full h-full" blurred />
             </div>
             <div className="flex flex-col items-center justify-center w-full h-full min-h-0 z-10">
               <PortraitSlideIn />
@@ -475,9 +609,40 @@ export default function Home() {
                   rows={4}
                 />
               </label>
+              <div className="grid grid-cols-[1fr_auto] items-end gap-3">
+                <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check
+                  <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
+                    {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
+                  </span>
+                  <input
+                    type="text"
+                    name="captchaAnswer"
+                    inputMode="numeric"
+                    placeholder="Answer"
+                    value={captchaAnswer}
+                    onChange={event => setCaptchaAnswer(event.target.value)}
+                    disabled={isSubmitting || isCaptchaLoading || !captcha.token}
+                    required
+                    className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-2 w-full"
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => void refreshCaptcha()}
+                  disabled={isSubmitting || isCaptchaLoading}
+                  className="rounded border px-3 py-2 text-sm text-black transition hover:bg-black/[.04] dark:text-white dark:hover:bg-white/[.08]"
+                >
+                  Refresh
+                </button>
+              </div>
+              {captchaError ? (
+                <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-200">
+                  {captchaError}
+                </div>
+              ) : null}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isCaptchaLoading || !captcha.token}
                 className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-white font-semibold py-2 rounded transition"
               >
                 {isSubmitting ? "Sending..." : "Send"}
@@ -501,6 +666,12 @@ export default function Home() {
         setForm={setForm}
         submitted={submitted}
         submitError={submitError}
+        captcha={captcha}
+        captchaAnswer={captchaAnswer}
+        setCaptchaAnswer={setCaptchaAnswer}
+        isCaptchaLoading={isCaptchaLoading}
+        captchaError={captchaError}
+        onRefreshCaptcha={refreshCaptcha}
         isSubmitting={isSubmitting}
         onSubmit={handleContactSubmit}
       />

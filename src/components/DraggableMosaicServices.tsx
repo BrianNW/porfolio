@@ -43,6 +43,9 @@ Think of me as your digital secret weapon—ready to swoop in, deliver pixel-per
   }
 ];
 
+const serviceCardClassName =
+  "flex flex-col items-center justify-center bg-transparent border border-white/20 dark:border-zinc-700/30 p-4 sm:p-6 transition hover:scale-95 cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center";
+
 export default function DraggableMosaicServices() {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -79,11 +82,11 @@ export default function DraggableMosaicServices() {
   return (
     <div
       ref={constraintsRef}
-      className="relative w-screen h-[calc(90vh+40px)] flex items-center justify-center overflow-hidden select-none backdrop-blur-xl border border-white/20 dark:border-zinc-700/30 shadow-2xl"
+      className="relative w-screen h-[calc(90vh+40px)] flex items-center justify-center overflow-hidden select-none border border-white/20 dark:border-zinc-700/30"
     >
       {/* Dark mode: show video after delay, Light mode: show light grey background */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <div className="block dark:hidden w-full h-full bg-zinc-100" />
+        <div className="block dark:hidden w-full h-full bg-transparent" />
         <AnimatePresence>
           {showVideo && (
             <motion.video
@@ -103,7 +106,7 @@ export default function DraggableMosaicServices() {
           )}
         </AnimatePresence>
       </div>
-      <div className="absolute inset-0 w-full h-full z-10 pointer-events-none" />
+      <div className="absolute inset-0 w-full h-full z-10 pointer-events-none bg-transparent" />
       <motion.div
         drag
         dragConstraints={constraintsRef}
@@ -115,7 +118,7 @@ export default function DraggableMosaicServices() {
       >
         {/* Card 1: UI/UX Design */}
         <div
-          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className={serviceCardClassName}
           onClick={() => { setOpenIdx(0); setClickedGlitch(0); }}
         >
           <GlitchTitle
@@ -128,7 +131,7 @@ export default function DraggableMosaicServices() {
         </div>
         {/* Card 2: Web Development */}
         <div
-          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className={serviceCardClassName}
           onClick={() => { setOpenIdx(1); setClickedGlitch(1); }}
         >
           <GlitchTitle
@@ -141,7 +144,7 @@ export default function DraggableMosaicServices() {
         </div>
         {/* Card 3: Consulting */}
         <div
-          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className={serviceCardClassName}
           onClick={() => { setOpenIdx(2); setClickedGlitch(2); }}
         >
           <GlitchTitle
@@ -154,7 +157,7 @@ export default function DraggableMosaicServices() {
         </div>
         {/* Card 4: SEO */}
         <div
-          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className={serviceCardClassName}
           onClick={() => { setOpenIdx(3); setClickedGlitch(3); }}
         >
           <GlitchTitle
@@ -168,7 +171,7 @@ export default function DraggableMosaicServices() {
 
         {/* Card 5: White Label */}
         <div
-          className="flex flex-col items-center justify-center bg-white/60 dark:bg-zinc-900/50 border border-white/20 dark:border-zinc-700/30 backdrop-blur-xl shadow-lg p-4 sm:p-6 transition hover:scale-95 hover:shadow-2xl hover:bg-[rgba(34,245,120,0.10)] cursor-pointer min-h-[120px] min-w-0 h-full w-full text-center"
+          className={serviceCardClassName}
           onClick={() => { setOpenIdx(4); setClickedGlitch(4); }}
         >
           <GlitchTitle
@@ -205,7 +208,7 @@ export default function DraggableMosaicServices() {
                 ×
               </button>
               <div className="flex flex-col items-center justify-center gap-4">
-                <p className="text-zinc-700 dark:text-zinc-200 text-lg sm:text-xl font-mono text-center mt-2">{services[openIdx]?.desc}</p>
+                <p className="text-zinc-700 dark:text-zinc-200 text-lg sm:text-xl font-normal font-mono text-center mt-2">{services[openIdx]?.desc}</p>
               </div>
             </motion.div>
           </motion.div>
