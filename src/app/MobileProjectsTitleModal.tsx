@@ -1,5 +1,8 @@
 "use client";
 import { useState } from "react";
+
+import GlitchTitle from "../components/GlitchTitle";
+
 export default function MobileProjectsTitleModal() {
   const [open, setOpen] = useState(true);
   return (
@@ -21,7 +24,13 @@ export default function MobileProjectsTitleModal() {
           >
             ×
           </button>
-          <h2 className="text-4xl font-extrabold capitalize tracking-tight text-[#4c1d95] dark:text-zinc-100 text-center mb-0">Past Projects</h2>
+          <GlitchTitle
+            as="h2"
+            glitchClassName="glitch-chromatic"
+            className="text-4xl font-extrabold capitalize tracking-tight text-zinc-900 dark:text-zinc-100 text-center mb-0"
+          >
+            Past Projects
+          </GlitchTitle>
         </div>
       )}
     </div>
