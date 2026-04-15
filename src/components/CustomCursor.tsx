@@ -6,6 +6,7 @@ export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const trailRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [hideCursor, setHideCursor] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const trailLength = 8;
   // Detect dark mode
   const [isDark, setIsDark] = useState(false);
@@ -17,6 +18,18 @@ export default function CustomCursor() {
     const observer = new MutationObserver(checkDark);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px), (pointer: coarse)');
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener('change', updateIsMobile);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateIsMobile);
+    };
   }, []);
 
   // Mouse move logic for cursor and trail
@@ -64,6 +77,10 @@ export default function CustomCursor() {
       window.removeEventListener('pointerout', handlePointerOut);
     };
   }, [trailLength]);
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <>

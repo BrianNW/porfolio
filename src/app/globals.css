@@ -57,6 +57,36 @@ html, body {
 .dark a, .dark button, .dark [role="button"], .dark input[type="button"], .dark input[type="submit"], .dark .cursor-pointer {
   cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L28 16L16 18L18 28L4 4Z" fill="%2300ff87" stroke="%2300ff87" stroke-width="2"/></svg>') 2 2, pointer !important;
 }
+@media (max-width: 767px), (pointer: coarse) {
+  html, body {
+    cursor: auto !important;
+  }
+
+  a,
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  .cursor-pointer,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  [contenteditable="true"],
+  .dark a,
+  .dark button,
+  .dark [role="button"],
+  .dark input[type="button"],
+  .dark input[type="submit"],
+  .dark .cursor-pointer,
+  .dark input[type="text"],
+  .dark input[type="email"],
+  .dark input[type="password"],
+  .dark textarea,
+  .dark [contenteditable="true"] {
+    cursor: auto !important;
+  }
+}
 /* Chromatic glitch color palette */
 :root {
   --glitch-red: #ff4757;

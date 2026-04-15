@@ -476,31 +476,31 @@ export default function Home() {
       content: (
         <main className="relative flex flex-col md:flex-row items-stretch justify-center min-h-screen w-full bg-white/80 dark:bg-zinc-900/80 overflow-hidden" style={{ background: 'transparent' }}>
           {/* Left column: animated typewriter and video background in dark mode */}
-            <div className="relative flex flex-col gap-6 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[60vh] md:min-h-0 justify-center px-4 md:pl-12 sm:px-6 z-10">
+            <div className="relative flex flex-col gap-3 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[68vh] md:min-h-0 justify-center px-4 pt-12 pb-[10px] md:pt-0 md:pb-0 md:pl-12 sm:px-6 z-10">
               {/* Overlay for better text visibility */}
               <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
-            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-home-title hero-main-glitch relative max-w-full text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
+            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-home-title hero-main-glitch relative max-w-full text-[2.15rem] md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
               <TypewriterText className="whitespace-pre-line">
                 {fullText}
               </TypewriterText>
             </GlitchTitle>
-            <div className="relative w-3/5 md:w-2/5 flex justify-center md:justify-start mt-2 mb-4">
+            <div className="relative w-3/5 md:w-2/5 flex justify-center md:justify-start mt-1 mb-2 md:mt-2 md:mb-4">
               <GlitchDivider />
             </div>
             <div className="relative w-full flex flex-col items-center md:items-start">
               <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
-              <p className="relative z-10 max-w-md text-base sm:text-base md:text-lg lg:text-xl leading-6 lg:leading-7 text-zinc-600 dark:text-zinc-200 font-mono">
+              <p className="relative z-10 max-w-md text-sm sm:text-base md:text-lg lg:text-xl leading-5 sm:leading-6 lg:leading-7 text-zinc-600 dark:text-zinc-200 font-mono">
               I design and develop modern, responsive websites for businesses and individuals. Explore my work, get a quote, or contact me below.
             </p>
             </div>
-            <div className="relative flex flex-col gap-4 text-base font-medium sm:flex-row w-full md:w-auto mt-4">
+            <div className="relative flex flex-col gap-4 text-base font-medium sm:flex-row w-full md:w-auto mt-2 md:mt-4">
               <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
               <button
-                className="relative z-10 btn-glitch btn-glass-purple flex h-12 w-full items-center justify-center md:justify-start text-white px-7 transition-colors md:w-[170px]"
+                className="relative z-10 btn-glitch btn-glass-purple flex h-10 w-full items-center justify-center md:justify-start text-sm md:text-base text-white px-5 md:px-7 transition-colors md:h-12 md:w-[170px]"
                 onClick={() => setContactOpen(true)}
                 type="button"
               >
-                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
+                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-sm md:text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
               </button>
             </div>
             {/* Cyberpunk video background (dark mode only, left column only) */}
@@ -516,7 +516,7 @@ export default function Home() {
             )}
           </div>
           {/* Right column: portrait */}
-            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[40vh] md:min-h-0">
+            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[36vh] md:min-h-0">
             {/* Blurred, darkened background image */}
             <div className="absolute inset-0 w-full h-full z-0">
               <PortraitVideo className="object-cover w-full h-full" blurred />
@@ -593,7 +593,7 @@ export default function Home() {
       key: "faq",
       content: (
         <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
-          <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">FAQ</GlitchTitle>
+          <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-8">FAQ</GlitchTitle>
           <div className="relative z-10 w-full max-w-2xl divide-y divide-zinc-200 dark:divide-zinc-700 rounded-xl overflow-hidden shadow-lg">
             {[
               {
@@ -619,8 +619,8 @@ export default function Home() {
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   aria-expanded={openFaq === idx}
                 >
-                  <GlitchTitle as="span" glitchClassName="glitch-chromatic" className="text-2xl font-bold text-left font-mono">{item.q}</GlitchTitle>
-                  <span className="ml-4 text-3xl text-[#a78bfa] dark:text-[#4c1d95]">{openFaq === idx ? '−' : '+'}</span>
+                  <GlitchTitle as="span" glitchClassName="glitch-chromatic" className="text-base md:text-2xl font-bold text-left font-mono">{item.q}</GlitchTitle>
+                  <span className="ml-4 text-lg md:text-3xl text-[#a78bfa] dark:text-[#4c1d95]">{openFaq === idx ? '−' : '+'}</span>
                 </button>
                 <AnimatePresence initial={false}>
                   {openFaq === idx && (
@@ -632,13 +632,13 @@ export default function Home() {
                       className="overflow-hidden px-4 pb-6"
                     >
                       {item.a ? (
-                        <p className="text-lg text-zinc-700 dark:text-zinc-200 font-mono">{item.a}</p>
+                        <p className="text-xs md:text-lg text-zinc-700 dark:text-zinc-200 font-mono">{item.a}</p>
                       ) : (
                         <div className="space-y-4">
-                          <p className="text-lg text-zinc-700 dark:text-zinc-200 font-mono">Pricing is project-based or retainer-based, depending on your needs. Get in touch for a custom quote or use the calculator below.</p>
+                          <p className="text-xs md:text-lg text-zinc-700 dark:text-zinc-200 font-mono">Pricing is project-based or retainer-based, depending on your needs. Get in touch for a custom quote or use the calculator below.</p>
                           <button
                             type="button"
-                            className="flex h-12 w-full items-center justify-center border border-solid border-black/[.08] px-10 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] text-black dark:text-white font-medium"
+                            className="flex h-11 w-full items-center justify-center border border-solid border-black/[.08] px-8 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] text-sm md:text-base text-black dark:text-white font-medium"
                             onClick={() => setPricingOpen(true)}
                           >
                             Pricing Calculator
@@ -660,17 +660,17 @@ export default function Home() {
       content: (
         <section id="contact" className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-8 py-32 bg-transparent mx-auto overflow-hidden">
           {/* <h2 className="section-title-glitch text-center">Contact Me</h2> */}
-            <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center mb-8">Contact Me</GlitchTitle>
+            <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-8">Contact Me</GlitchTitle>
           {submitted ? (
             <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
           ) : (
-            <form onSubmit={handleContactSubmit} className="flex flex-col gap-4 w-full">
+            <form onSubmit={handleContactSubmit} className="flex flex-col gap-3 w-full text-sm md:text-base">
               {submitError ? (
                 <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-950/40 dark:text-red-200">
                   {submitError}
                 </div>
               ) : null}
-              <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Name
+              <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Name
                 <input
                   type="text"
                   name="name"
@@ -679,10 +679,10 @@ export default function Home() {
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   disabled={isSubmitting}
                   required
-                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-1 w-full"
+                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-1 w-full"
                 />
               </label>
-              <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Email
+              <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Email
                 <input
                   type="email"
                   name="email"
@@ -691,10 +691,10 @@ export default function Home() {
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                   disabled={isSubmitting}
                   required
-                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-1 w-full"
+                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-1 w-full"
                 />
               </label>
-              <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Message
+              <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Message
                 <textarea
                   name="message"
                   placeholder="Your Message"
@@ -702,12 +702,12 @@ export default function Home() {
                   onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                   disabled={isSubmitting}
                   required
-                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-1 w-full"
+                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-1 w-full"
                   rows={4}
                 />
               </label>
               <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-                <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check
+                <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check
                   <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
                     {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
                   </span>
@@ -720,14 +720,14 @@ export default function Home() {
                     onChange={event => setCaptchaAnswer(event.target.value)}
                     disabled={isSubmitting || isCaptchaLoading || !captcha.token}
                     required
-                    className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-2 w-full"
+                    className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-2 w-full"
                   />
                 </label>
                 <button
                   type="button"
                   onClick={() => void refreshCaptcha()}
                   disabled={isSubmitting || isCaptchaLoading}
-                  className="rounded border px-3 py-2 text-sm text-black transition hover:bg-black/[.04] dark:text-white dark:hover:bg-white/[.08]"
+                  className="rounded border px-3 py-2 text-xs md:text-sm text-black transition hover:bg-black/[.04] dark:text-white dark:hover:bg-white/[.08]"
                 >
                   Refresh
                 </button>
@@ -740,7 +740,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isSubmitting || isCaptchaLoading || !captcha.token}
-                className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-white font-semibold py-2 rounded transition"
+                className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-sm md:text-base text-white font-semibold py-2 rounded transition"
               >
                 {isSubmitting ? "Sending..." : "Send"}
               </button>
