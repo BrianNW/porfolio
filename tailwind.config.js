@@ -8,11 +8,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Oakes Grotesk', 'Arial', 'sans-serif'],
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };
