@@ -289,6 +289,7 @@ function PortraitSlideIn() {
 export default function Home() {
     // Animation direction for flip
     const [direction, setDirection] = useState(0);
+  const sectionSwipeRef = useRef({ startX: 0, startY: 0, tracking: false });
 
     // Handler for flipping between sections
     function flipToSection(nextIdx: number) {
@@ -313,6 +314,56 @@ export default function Home() {
   const [showArrowCue, setShowArrowCue] = useState(false);
   // Remove containerRef and scroll logic for flip animation
   const fullText = "I architect digital experiences.\nTogether, let’s translate your vision into a living reality";
+
+  function isInteractiveSwipeTarget(target: EventTarget | null) {
+    return target instanceof HTMLElement
+      ? Boolean(
+          target.closest(
+            "button, a, input, textarea, select, label, [role='button'], [contenteditable='true']"
+          )
+        )
+      : false;
+  }
+
+  function handleSectionTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+    if (event.touches.length !== 1 || isInteractiveSwipeTarget(event.target)) {
+      sectionSwipeRef.current.tracking = false;
+      return;
+    }
+
+    const touch = event.touches[0];
+    sectionSwipeRef.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      tracking: true,
+    };
+  }
+
+  function handleSectionTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+    if (!sectionSwipeRef.current.tracking || event.changedTouches.length !== 1) {
+      sectionSwipeRef.current.tracking = false;
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - sectionSwipeRef.current.startX;
+    const deltaY = touch.clientY - sectionSwipeRef.current.startY;
+
+    sectionSwipeRef.current.tracking = false;
+
+    if (Math.abs(deltaX) < 70 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) {
+      return;
+    }
+
+    if (deltaX < 0 && current < sections.length - 1) {
+      flipToSection(current + 1);
+      return;
+    }
+
+    if (deltaX > 0 && current > 0) {
+      flipToSection(current - 1);
+    }
+  }
 
   useEffect(() => {
     let cueTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -798,7 +849,11 @@ export default function Home() {
           )}
         </div>
         {/* Book-style flip animation container */}
-        <div className="relative w-full h-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
+        <div
+          className="relative w-full h-full min-h-screen flex flex-col items-center justify-center overflow-hidden"
+          onTouchStart={handleSectionTouchStart}
+          onTouchEnd={handleSectionTouchEnd}
+        >
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={sections[current].key}
