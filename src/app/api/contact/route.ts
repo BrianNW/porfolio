@@ -166,12 +166,7 @@ export async function POST(request: Request) {
       to: mailer.config.to,
       replyTo: email,
       subject: `Portfolio contact from ${name}`,
-      text: [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        "",
-        message,
-      ].join("\n"),
+      text: [`Name: ${name}`, `Email: ${email}`, "", message].join("\n"),
       html: `
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
         <p><strong>Email:</strong> ${escapeHtml(email)}</p>

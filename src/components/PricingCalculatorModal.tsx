@@ -12,7 +12,7 @@ const features = [
 
 export default function PricingCalculatorModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [pages, setPages] = useState(1);
-  const [options, setOptions] = useState({});
+  const [options, setOptions] = useState<Record<string, boolean>>({});
 
   if (!open) return null;
 

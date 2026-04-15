@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 interface GlitchTitleProps {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType;
   glitchClassName?: string;
   fixedInterval?: number;
 }

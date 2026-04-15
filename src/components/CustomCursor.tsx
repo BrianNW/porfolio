@@ -93,7 +93,9 @@ export default function CustomCursor() {
           {Array.from({ length: trailLength }).map((_, i) => (
             <div
               key={i}
-              ref={el => (trailRefs.current[i] = el)}
+              ref={(el) => {
+                trailRefs.current[i] = el;
+              }}
               style={{
                 position: "fixed",
                 top: 0,
@@ -111,7 +113,6 @@ export default function CustomCursor() {
                 zIndex: 2147483646,
                 opacity: 0.12 + 0.08 * (1 - i / trailLength),
                 filter: "blur(8px)",
-                mixBlendMode: "lighten",
                 transform: "translate3d(0, 0, 0)",
                 transition: "border 0.2s, box-shadow 0.2s",
               }}

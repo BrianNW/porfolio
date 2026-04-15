@@ -52,15 +52,19 @@ export default function VerticalCarouselProjects() {
     inactivityTimer.current = setTimeout(() => setManual(false), 3000);
   }
 
-  // Touch/click to enable manual scroll
-  function handlePointerDown(e: React.PointerEvent) {
-    triggerManualMode();
-    setStartY(e.clientY || (e as any).touches?.[0]?.clientY || 0);
+  function getTouchClientY(event: React.TouchEvent<HTMLDivElement>) {
+    return event.touches[0]?.clientY ?? event.changedTouches[0]?.clientY ?? 0;
   }
-  function handlePointerMove(e: React.PointerEvent) {
+
+  // Touch/click to enable manual scroll
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    triggerManualMode();
+    setStartY(e.clientY);
+  }
+  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
     if (manual && startY !== null) {
       triggerManualMode();
-      const clientY = e.clientY || (e as any).touches?.[0]?.clientY || 0;
+      const clientY = e.clientY;
       const delta = clientY - startY;
       let newY = scrollY + delta;
       if (Math.abs(newY) >= totalHeight) newY = 0;
@@ -68,11 +72,38 @@ export default function VerticalCarouselProjects() {
       controls.set({ y: newY });
     }
   }
-  function handlePointerUp(e: React.PointerEvent) {
+  function handlePointerUp(e: React.PointerEvent<HTMLDivElement>) {
     triggerManualMode();
     setStartY(null);
     setScrollY(prev => {
-      const clientY = e.clientY || (e as any).changedTouches?.[0]?.clientY || 0;
+      const clientY = e.clientY;
+      const delta = clientY - (startY ?? 0);
+      let newY = prev + delta;
+      if (Math.abs(newY) >= totalHeight) newY = 0;
+      if (newY > 0) newY = -totalHeight;
+      return newY;
+    });
+  }
+  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    triggerManualMode();
+    setStartY(getTouchClientY(e));
+  }
+  function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+    if (manual && startY !== null) {
+      triggerManualMode();
+      const clientY = getTouchClientY(e);
+      const delta = clientY - startY;
+      let newY = scrollY + delta;
+      if (Math.abs(newY) >= totalHeight) newY = 0;
+      if (newY > 0) newY = -totalHeight;
+      controls.set({ y: newY });
+    }
+  }
+  function handleTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
+    triggerManualMode();
+    setStartY(null);
+    setScrollY(prev => {
+      const clientY = getTouchClientY(e);
       const delta = clientY - (startY ?? 0);
       let newY = prev + delta;
       if (Math.abs(newY) >= totalHeight) newY = 0;
@@ -89,9 +120,9 @@ export default function VerticalCarouselProjects() {
       onPointerMove={manual ? handlePointerMove : undefined}
       onPointerUp={manual ? handlePointerUp : undefined}
       onPointerLeave={manual ? handlePointerUp : undefined}
-      onTouchStart={handlePointerDown}
-      onTouchMove={manual ? handlePointerMove : undefined}
-      onTouchEnd={manual ? handlePointerUp : undefined}
+      onTouchStart={handleTouchStart}
+      onTouchMove={manual ? handleTouchMove : undefined}
+      onTouchEnd={manual ? handleTouchEnd : undefined}
       style={{ touchAction: 'none', WebkitOverflowScrolling: 'touch' }}
     >
       <motion.div

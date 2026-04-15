@@ -13,9 +13,9 @@ const features = [
 
 export default function PricingCalculator() {
   const [pages, setPages] = useState(1);
-  const [options, setOptions] = useState({});
+  const [options, setOptions] = useState<Record<string, boolean>>({});
 
-  const handleOption = (feature, checked) => {
+  const handleOption = (feature: string, checked: boolean) => {
     setOptions((prev) => ({ ...prev, [feature]: checked }));
   };
 

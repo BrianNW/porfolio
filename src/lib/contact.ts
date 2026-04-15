@@ -29,6 +29,59 @@ function normalizeField(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function isStaticContactMode() {
+  return process.env.NEXT_PUBLIC_CONTACT_MODE === "mailto";
+}
+
+function createClientCaptchaChallenge(): ContactCaptchaChallenge {
+  const useAddition = Math.random() >= 0.5;
+  let left = Math.floor(Math.random() * 8) + 2;
+  let right = Math.floor(Math.random() * 9) + 1;
+
+  if (!useAddition && right > left) {
+    [left, right] = [right, left];
+  }
+
+  const answer = String(useAddition ? left + right : left - right);
+  const token = typeof window === "undefined" ? answer : window.btoa(answer);
+
+  return {
+    prompt: `What is ${left} ${useAddition ? "+" : "-"} ${right}?`,
+    token,
+  };
+}
+
+function verifyClientCaptcha(answer: string, token: string) {
+  const normalizedAnswer = normalizeField(answer);
+  const normalizedToken = normalizeField(token);
+
+  if (!normalizedAnswer || !normalizedToken) {
+    throw new Error("Complete the captcha before sending your message.");
+  }
+
+  const expectedAnswer =
+    typeof window === "undefined" ? normalizedToken : window.atob(normalizedToken);
+
+  if (normalizedAnswer !== expectedAnswer) {
+    throw new Error("Captcha verification failed. Please try again.");
+  }
+}
+
+function buildMailtoUrl(payload: ContactFormPayload) {
+  const toEmail = process.env.NEXT_PUBLIC_CONTACT_TO_EMAIL;
+
+  if (!toEmail) {
+    throw new Error("GitHub Pages contact fallback is missing NEXT_PUBLIC_CONTACT_TO_EMAIL.");
+  }
+
+  const subject = encodeURIComponent(`Portfolio contact from ${payload.name}`);
+  const body = encodeURIComponent(
+    [`Name: ${payload.name}`, `Email: ${payload.email}`, "", payload.message].join("\n")
+  );
+
+  return `mailto:${toEmail}?subject=${subject}&body=${body}`;
+}
+
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -105,6 +158,10 @@ export function parseContactSubmissionPayload(payload: unknown):
 }
 
 export async function fetchContactCaptchaChallenge() {
+  if (isStaticContactMode()) {
+    return createClientCaptchaChallenge();
+  }
+
   const response = await fetch("/api/contact", {
     method: "GET",
     cache: "no-store",
@@ -125,6 +182,16 @@ export async function fetchContactCaptchaChallenge() {
 }
 
 export async function submitContactForm(payload: ContactSubmissionPayload) {
+  if (isStaticContactMode()) {
+    verifyClientCaptcha(payload.captchaAnswer, payload.captchaToken);
+
+    if (typeof window !== "undefined") {
+      window.location.href = buildMailtoUrl(payload);
+    }
+
+    return;
+  }
+
   const response = await fetch("/api/contact", {
     method: "POST",
     headers: {
