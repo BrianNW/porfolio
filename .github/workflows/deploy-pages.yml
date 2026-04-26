@@ -21,6 +21,8 @@ jobs:
     env:
       GITHUB_PAGES: "true"
       STATIC_EXPORT: "true"
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      REPO_BASEPATH: /${{ github.event.repository.name }}
       PAGES_CUSTOM_DOMAIN: ${{ vars.PAGES_CUSTOM_DOMAIN }}
       NEXT_PUBLIC_CONTACT_MODE: mailto
       NEXT_PUBLIC_CONTACT_TO_EMAIL: ${{ vars.CONTACT_TO_EMAIL }}

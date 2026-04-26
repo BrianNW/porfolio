@@ -6,7 +6,12 @@ const isUserOrOrgPagesRepo = repositoryName.endsWith(".github.io");
 const customDomain = process.env.PAGES_CUSTOM_DOMAIN?.trim() ?? "";
 const shouldUseRepoBasePath =
   isGitHubPagesBuild && repositoryName && !isUserOrOrgPagesRepo && !customDomain;
-const basePath = shouldUseRepoBasePath ? `/${repositoryName}` : "";
+// REPO_BASEPATH is explicitly set by the CI workflow and takes priority over
+// the auto-detected value, so a stale PAGES_CUSTOM_DOMAIN variable can never
+// accidentally zero-out the base path.
+const basePath =
+  process.env.REPO_BASEPATH ||
+  (shouldUseRepoBasePath ? `/${repositoryName}` : "");
 
 const nextConfig: NextConfig = {
   env: {
