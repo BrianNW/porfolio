@@ -6,19 +6,11 @@ type ThemeToggleProps = {
 };
 
 export default function ThemeToggle({ onThemeChange }: ThemeToggleProps) {
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setTheme(isDark ? "dark" : "light");
-      if (isDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-      if (onThemeChange) onThemeChange(isDark);
-    }
+    document.documentElement.classList.remove("dark");
+    if (onThemeChange) onThemeChange(false);
     // eslint-disable-next-line
   }, []);
 
@@ -35,8 +27,6 @@ export default function ThemeToggle({ onThemeChange }: ThemeToggleProps) {
     }
     if (onThemeChange) onThemeChange(newTheme === "dark");
   };
-
-  if (!theme) return null;
 
   return (
     <button
