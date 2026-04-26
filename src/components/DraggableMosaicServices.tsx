@@ -83,7 +83,7 @@ export default function DraggableMosaicServices() {
   return (
     <div
       ref={constraintsRef}
-      className="relative w-screen h-[calc(90vh+40px)] flex items-center justify-center overflow-hidden select-none border border-white/20 dark:border-zinc-700/30"
+      className="relative w-screen h-[calc(90vh+40px)] flex items-start md:items-center justify-center pt-2 md:pt-0 overflow-hidden select-none border border-white/20 dark:border-zinc-700/30"
     >
       {/* Dark mode: show video after delay, Light mode: show light grey background */}
       <div className="absolute inset-0 w-full h-full z-0">

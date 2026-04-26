@@ -502,7 +502,7 @@ export default function Home() {
     {
       key: "about",
       content: (
-        <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
+        <section className="relative flex flex-col items-center justify-start md:justify-center min-h-screen w-full max-w-3xl px-8 pt-20 pb-12 md:py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
           <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-8">About Me</GlitchTitle>
           <TypewriterText className="text-lg md:text-xl lg:text-2xl font-mono text-center max-w-xl mt-2 text-zinc-700 dark:text-zinc-200">
             I’m a passionate web developer and designer with a love for crafting beautiful, user-friendly digital experiences. I specialize in building modern, responsive websites that help businesses and individuals stand out online. My approach combines clean design, accessibility, and performance to deliver results you’ll love.
@@ -543,7 +543,7 @@ export default function Home() {
     {
       key: "services",
       content: (
-        <section className="relative flex flex-col items-center justify-center min-h-screen w-full px-0 py-32 mx-0 bg-transparent overflow-hidden" style={{ background: 'transparent' }}>
+        <section className="relative flex flex-col items-center justify-start md:justify-center min-h-screen w-full px-0 pt-16 pb-8 md:py-32 mx-0 bg-transparent overflow-hidden" style={{ background: 'transparent' }}>
           {/* Cyberpunk video background (dark mode only) */}
           {isDark && (
             <video
@@ -555,7 +555,7 @@ export default function Home() {
               src={withBasePath("/cyberpunk.mp4")}
             />
           )}
-          <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 mb-8 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center">Services</GlitchTitle>
+          <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 mb-2 md:mb-8 translate-y-3 md:translate-y-0 text-zinc-800 dark:text-white text-3xl md:text-5xl lg:text-6xl font-bold text-center">Services</GlitchTitle>
           <DraggableMosaicServices />
         </section>
       ),
@@ -563,7 +563,7 @@ export default function Home() {
     {
       key: "faq",
       content: (
-        <section className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-3xl px-8 py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
+        <section className="relative flex flex-col items-center justify-start md:justify-center min-h-screen w-full max-w-3xl px-8 pt-20 pb-12 md:py-32 bg-transparent mx-auto overflow-hidden" style={{ background: 'transparent' }}>
           <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-8">FAQ</GlitchTitle>
           <div className="relative z-10 w-full max-w-2xl divide-y divide-zinc-200 dark:divide-zinc-700 rounded-xl overflow-hidden shadow-lg">
             {[
@@ -629,7 +629,7 @@ export default function Home() {
     {
       key: "contact",
       content: (
-        <section id="contact" className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-8 py-32 bg-transparent mx-auto overflow-hidden">
+        <section id="contact" className="relative flex flex-col items-center justify-start md:justify-center min-h-screen w-full max-w-2xl px-8 pt-20 pb-12 md:py-32 bg-transparent mx-auto overflow-hidden">
           {/* <h2 className="section-title-glitch text-center">Contact Me</h2> */}
             <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-8">Contact Me</GlitchTitle>
           {isContactVisible ? (

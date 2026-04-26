@@ -151,7 +151,7 @@ export default function VerticalCarouselProjects() {
         {displayProjects.map((project, idx) => (
           <div
             key={idx + project.name}
-            className="w-full"
+            className="w-[92vw] md:w-full mx-auto"
             style={{ height: itemHeight, minHeight: itemHeight, margin: 0, padding: 0 }}
           >
             <img
