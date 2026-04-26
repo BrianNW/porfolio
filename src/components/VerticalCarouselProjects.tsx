@@ -151,13 +151,13 @@ export default function VerticalCarouselProjects() {
         {displayProjects.map((project, idx) => (
           <div
             key={idx + project.name}
-            className="w-[92vw] md:w-full mx-auto"
+            className="w-full"
             style={{ height: itemHeight, minHeight: itemHeight, margin: 0, padding: 0 }}
           >
             <img
               src={withBasePath(`/projects/${project.file}`)}
               alt={project.name}
-              className="object-cover w-full h-full block"
+              className="object-contain w-full h-full max-w-full block"
               draggable={false}
               style={{ borderRadius: 0, margin: 0, padding: 0, boxShadow: 'none', background: 'none' }}
             />

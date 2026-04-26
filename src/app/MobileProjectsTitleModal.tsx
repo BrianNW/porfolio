@@ -27,7 +27,7 @@ export default function MobileProjectsTitleModal() {
           <GlitchTitle
             as="h2"
             glitchClassName="glitch-chromatic"
-            className="hero-main-glitch force-glitch text-4xl font-extrabold capitalize tracking-tight text-zinc-900 dark:text-zinc-100 text-center mb-0"
+            className="hero-main-glitch force-glitch -translate-y-6 text-4xl font-extrabold capitalize tracking-tight text-zinc-900 dark:text-zinc-100 text-center mb-0"
           >
             Past Projects
           </GlitchTitle>

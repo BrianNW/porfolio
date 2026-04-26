@@ -749,7 +749,7 @@ export default function Home() {
         {/* Section navigation arrows: bottom on mobile, side on desktop */}
         <div>
           {/* Mobile: bottom fixed above progress bar */}
-          <div className="fixed bottom-20 left-0 right-0 z-50 flex justify-between items-center px-8 md:hidden pointer-events-none">
+          <div className={`fixed bottom-20 left-0 right-0 z-50 flex items-center px-8 md:hidden pointer-events-none ${current > 0 ? "justify-between" : "justify-end"}`}>
             {current > 0 && (
               <button
                 className={`nav-arrow-button p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/10 border border-white/40 dark:border-zinc-700/20 hover:bg-white/60 dark:hover:bg-zinc-800/20 transition pointer-events-auto ${showArrowCue ? "nav-arrow-cue" : ""}`}
