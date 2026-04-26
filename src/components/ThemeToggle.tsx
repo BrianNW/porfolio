@@ -32,7 +32,7 @@ export default function ThemeToggle({ onThemeChange }: ThemeToggleProps) {
     <button
       aria-label="Toggle Light/Dark Mode"
       onClick={toggleTheme}
-      className="fixed top-3 right-3 md:top-8 md:right-8 z-50 p-2 md:p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/20 border border-white/40 dark:border-zinc-700/30 hover:bg-white/60 dark:hover:bg-zinc-800/30 transition"
+      className="fixed top-1 right-1 md:top-8 md:right-8 z-50 p-2 md:p-3 rounded-full shadow-lg backdrop-blur-md bg-white/40 dark:bg-zinc-800/20 border border-white/40 dark:border-zinc-700/30 hover:bg-white/60 dark:hover:bg-zinc-800/30 transition"
       style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.10)" }}
     >
       <span className="text-xl md:text-2xl text-blue-600 dark:text-blue-400">{theme === "dark" ? "🌙" : "☀️"}</span>
