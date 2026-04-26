@@ -168,20 +168,20 @@ export default function VerticalCarouselProjects() {
       </motion.div>
       {selectedProject && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-0 md:p-4"
           onClick={() => setSelectedProject(null)}
           role="dialog"
           aria-modal="true"
           aria-label={`${selectedProject.name} full image`}
         >
           <div
-            className="relative max-w-[95vw] max-h-[90vh]"
+            className="relative w-screen h-screen md:w-auto md:h-auto md:max-w-[95vw] md:max-h-[90vh]"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setSelectedProject(null)}
-              className="absolute -top-3 -right-3 z-10 h-9 w-9 rounded-full bg-white/90 text-zinc-900 text-2xl leading-none shadow"
+              className="absolute top-3 right-3 z-10 h-9 w-9 rounded-full bg-white/90 text-zinc-900 text-2xl leading-none shadow"
               aria-label="Close full image"
             >
               ×
@@ -189,7 +189,7 @@ export default function VerticalCarouselProjects() {
             <img
               src={withBasePath(`/projects/${selectedProject.file}`)}
               alt={selectedProject.name}
-              className="max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain"
+              className="max-w-screen max-h-screen w-full h-full object-contain md:max-w-[95vw] md:max-h-[90vh] md:w-auto md:h-auto"
               draggable={false}
             />
           </div>
