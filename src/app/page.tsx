@@ -450,7 +450,7 @@ export default function Home() {
             <div className="relative flex flex-col gap-3 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[60vh] md:min-h-0 justify-center px-4 pt-12 pb-[2px] md:pt-0 md:pb-0 md:pl-12 sm:px-6 z-10">
               {/* Overlay for better text visibility */}
               <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
-            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-home-title hero-main-glitch relative max-w-full text-[1.85rem] md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
+            <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-home-title hero-main-glitch relative max-w-full text-[1.7rem] md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
               <TypewriterText className="whitespace-pre-line">
                 {fullText}
               </TypewriterText>
