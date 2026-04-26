@@ -96,7 +96,7 @@ export default function DraggableMosaicServices() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.7, opacity: 0 }}
               transition={{ duration: 0.32, ease: "easeOut" }}
-              className="hidden dark:block absolute inset-1/2 z-0 -translate-x-1/2 -translate-y-1/2 object-cover w-[80vw] h-[60vh] max-w-3xl max-h-[70vh] rounded-xl shadow-2xl"
+              className="hidden dark:block absolute inset-1/2 z-0 -translate-x-1/2 -translate-y-1/2 object-cover w-[80vw] h-[60vh] max-w-3xl max-h-[70vh] rounded-xl shadow-2xl pointer-events-none"
               src={withBasePath("/digital-2.mp4")}
               autoPlay
               loop
@@ -111,7 +111,7 @@ export default function DraggableMosaicServices() {
         drag
         dragConstraints={constraintsRef}
         dragElastic={0.2}
-        className="grid grid-cols-2 md:grid-cols-3 grid-rows-3 gap-0 w-full h-[60vh]"
+        className="relative z-20 grid grid-cols-2 md:grid-cols-3 grid-rows-3 gap-0 w-full h-[60vh]"
         style={{ touchAction: 'none', cursor: 'grab' }}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}
