@@ -467,11 +467,11 @@ export default function Home() {
             <div className="relative flex flex-col gap-4 text-base font-medium sm:flex-row w-full md:w-auto mt-2 md:mt-4">
               <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
               <button
-                className="relative z-10 btn-glitch btn-glass-purple flex h-12 w-full items-center justify-center md:justify-start text-base md:text-base text-white px-5 md:px-7 transition-colors md:h-12 md:w-[170px]"
+                className="relative z-10 btn-glitch btn-glass-purple flex h-11 w-full items-center justify-center md:justify-start text-sm md:text-base text-white px-5 md:px-7 transition-colors md:h-12 md:w-[170px]"
                 onClick={() => setContactOpen(true)}
                 type="button"
               >
-                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-base md:text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
+                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-sm md:text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
               </button>
             </div>
             {/* Cyberpunk video background (dark mode only, left column only) */}
