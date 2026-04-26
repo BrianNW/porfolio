@@ -487,7 +487,7 @@ export default function Home() {
             )}
           </div>
           {/* Right column: portrait */}
-            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[36vh] md:min-h-0">
+            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[34vh] md:min-h-0">
             {/* Blurred, darkened background image */}
             <div className="absolute inset-0 w-full h-full z-0">
               <PortraitVideo className="object-cover w-full h-full" blurred />
