@@ -187,7 +187,7 @@ export default function DraggableMosaicServices() {
       <AnimatePresence>
         {openIdx !== null && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 dark:bg-zinc-900/30 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30"
+            className="fixed inset-0 z-50 flex items-start md:items-center justify-center pt-10 md:pt-0 bg-white/30 dark:bg-zinc-900/30 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

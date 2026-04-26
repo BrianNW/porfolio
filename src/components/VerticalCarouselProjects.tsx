@@ -19,6 +19,7 @@ export default function VerticalCarouselProjects() {
   const controls = useAnimation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [manual, setManual] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
   const startYRef = useRef<number | null>(null);
   const gestureStartScrollYRef = useRef(0);
@@ -157,13 +158,43 @@ export default function VerticalCarouselProjects() {
             <img
               src={withBasePath(`/projects/${project.file}`)}
               alt={project.name}
-              className="object-contain w-full h-full max-w-full block"
+              className="object-cover w-full h-full block cursor-zoom-in"
               draggable={false}
+              onClick={() => setSelectedProject(project)}
               style={{ borderRadius: 0, margin: 0, padding: 0, boxShadow: 'none', background: 'none' }}
             />
           </div>
         ))}
       </motion.div>
+      {selectedProject && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setSelectedProject(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedProject.name} full image`}
+        >
+          <div
+            className="relative max-w-[95vw] max-h-[90vh]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedProject(null)}
+              className="absolute -top-3 -right-3 z-10 h-9 w-9 rounded-full bg-white/90 text-zinc-900 text-2xl leading-none shadow"
+              aria-label="Close full image"
+            >
+              ×
+            </button>
+            <img
+              src={withBasePath(`/projects/${selectedProject.file}`)}
+              alt={selectedProject.name}
+              className="max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain"
+              draggable={false}
+            />
+          </div>
+        </div>
+      )}
       {/* No visible scrollbar */}
       <style>{`.vertical-carousel::-webkit-scrollbar { display: none !important; }`}</style>
     </div>
