@@ -121,9 +121,9 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
               </div>
             ) : null}
             <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-              <label className="block text-sm text-black dark:text-white">
+              <label className="block text-base md:text-lg text-black dark:text-white">
                 Security Check (to prevent bots and spam)
-                <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
+                <span className="mt-1 block text-lg md:text-xl font-bold text-zinc-600 dark:text-zinc-300">
                   {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
                 </span>
                 <input
@@ -135,7 +135,7 @@ export default function ContactModal({ open, onClose }: { open: boolean; onClose
                   onChange={(event) => setCaptchaAnswer(event.target.value)}
                   disabled={isVerifying || isCaptchaLoading || !captcha.token}
                   required
-                  className="mt-2 w-full rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-mono placeholder:font-mono"
+                  className="mt-2 w-full rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-base md:text-lg text-black dark:text-white font-mono placeholder:font-mono"
                 />
               </label>
               <button

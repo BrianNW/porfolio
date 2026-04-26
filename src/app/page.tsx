@@ -98,8 +98,8 @@ function ContactOverlay({
                     </div>
                   ) : null}
                   <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-                    <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check (to prevent bots and spam)
-                      <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
+                    <label className="text-base md:text-lg text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check (to prevent bots and spam)
+                      <span className="mt-1 block text-lg md:text-xl font-bold text-zinc-600 dark:text-zinc-300">
                         {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
                       </span>
                       <input
@@ -111,7 +111,7 @@ function ContactOverlay({
                         onChange={event => setCaptchaAnswer(event.target.value)}
                         disabled={isVerifying || isCaptchaLoading || !captcha.token}
                         required
-                        className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-2 w-full"
+                        className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-base md:text-lg text-black dark:text-white mt-2 w-full"
                       />
                     </label>
                     <button
@@ -259,7 +259,7 @@ function PortraitSlideIn() {
       className={`flex flex-col items-center justify-center transition-transform duration-1000 ease-out ${visible ? 'translate-x-0 opacity-100' : '-translate-x-32 opacity-0'}`}
     >
       <div className="relative overflow-hidden rounded-full ring-4 ring-[#a78bfa33] border border-[#a78bfa22] bg-white/10 dark:bg-zinc-900/10 backdrop-blur-md shadow-xl portrait-glow">
-        <PortraitVideo className="object-cover rounded-full scale-125 w-56 h-56 md:w-[420px] md:h-[420px]" />
+        <PortraitVideo className="object-cover rounded-full scale-125 w-64 h-64 md:w-[420px] md:h-[420px]" />
       </div>
     </div>
   );
@@ -447,7 +447,7 @@ export default function Home() {
       content: (
         <main className="relative flex flex-col md:flex-row items-stretch justify-center min-h-screen w-full bg-white/80 dark:bg-zinc-900/80 overflow-hidden" style={{ background: 'transparent' }}>
           {/* Left column: animated typewriter and video background in dark mode */}
-            <div className="relative flex flex-col gap-3 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[68vh] md:min-h-0 justify-center px-4 pt-12 pb-[10px] md:pt-0 md:pb-0 md:pl-12 sm:px-6 z-10">
+            <div className="relative flex flex-col gap-3 items-center md:items-start text-center md:text-left w-full md:w-1/2 h-full min-h-[68vh] md:min-h-0 justify-center px-4 pt-12 pb-[2px] md:pt-0 md:pb-0 md:pl-12 sm:px-6 z-10">
               {/* Overlay for better text visibility */}
               <div className="absolute inset-0 z-0 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm pointer-events-none" />
             <GlitchTitle as="h1" glitchClassName="glitch-chromatic" className="hero-home-title hero-main-glitch relative max-w-full text-[2.15rem] md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight whitespace-pre-line text-center md:text-left force-glitch">
@@ -467,11 +467,11 @@ export default function Home() {
             <div className="relative flex flex-col gap-4 text-base font-medium sm:flex-row w-full md:w-auto mt-2 md:mt-4">
               <div className="absolute inset-0 w-full h-full rounded-xl bg-white/90 dark:bg-zinc-900/90 z-0" />
               <button
-                className="relative z-10 btn-glitch btn-glass-purple flex h-10 w-full items-center justify-center md:justify-start text-sm md:text-base text-white px-5 md:px-7 transition-colors md:h-12 md:w-[170px]"
+                className="relative z-10 btn-glitch btn-glass-purple flex h-12 w-full items-center justify-center md:justify-start text-base md:text-base text-white px-5 md:px-7 transition-colors md:h-12 md:w-[170px]"
                 onClick={() => setContactOpen(true)}
                 type="button"
               >
-                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-sm md:text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
+                <GlitchTitle glitchClassName="glitch-chromatic" className="text-zinc-800 dark:text-white text-base md:text-base font-normal leading-tight truncate whitespace-nowrap w-full">Contact Me</GlitchTitle>
               </button>
             </div>
             {/* Cyberpunk video background (dark mode only, left column only) */}
@@ -487,7 +487,7 @@ export default function Home() {
             )}
           </div>
           {/* Right column: portrait */}
-            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[36vh] md:min-h-0">
+            <div className="w-full md:w-1/2 h-full flex items-stretch justify-center relative overflow-hidden min-h-[44vh] md:min-h-0">
             {/* Blurred, darkened background image */}
             <div className="absolute inset-0 w-full h-full z-0">
               <PortraitVideo className="object-cover w-full h-full" blurred />
@@ -662,8 +662,8 @@ export default function Home() {
                 </div>
               ) : null}
               <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-                <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check (to prevent bots and spam)
-                  <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
+                <label className="text-base md:text-lg text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check (to prevent bots and spam)
+                  <span className="mt-1 block text-lg md:text-xl font-bold text-zinc-600 dark:text-zinc-300">
                     {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
                   </span>
                   <input
@@ -675,7 +675,7 @@ export default function Home() {
                     onChange={event => setCaptchaAnswer(event.target.value)}
                     disabled={isVerifying || isCaptchaLoading || !captcha.token}
                     required
-                    className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-2 w-full"
+                    className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-base md:text-lg text-black dark:text-white mt-2 w-full"
                   />
                 </label>
                 <button
