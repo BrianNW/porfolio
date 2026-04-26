@@ -60,9 +60,10 @@ This repo includes a GitHub Actions workflow that deploys the site to GitHub Pag
 
 1. In GitHub, enable Pages and set the source to GitHub Actions.
 2. Add a repository variable named `CONTACT_TO_EMAIL` if you want the Pages deployment to use the `mailto:` contact fallback.
-3. Push to `main` and the workflow will build and deploy automatically.
+3. If you are using a custom domain, add a repository variable named `PAGES_CUSTOM_DOMAIN` with the exact host name, for example `briannw.com`.
+4. Push to `main` and the workflow will build and deploy automatically.
 
-The Pages build uses `output: "export"`, computes the correct `basePath` from the repository name, and switches the contact form to static `mailto:` mode because GitHub Pages cannot run the local Next.js API route.
+The Pages build uses `output: "export"`, computes the correct `basePath` from the repository name unless a custom domain is configured, writes a `CNAME` file when `PAGES_CUSTOM_DOMAIN` is set, and switches the contact form to static `mailto:` mode because GitHub Pages cannot run the local Next.js API route.
 
 ## Learn More
 

@@ -21,6 +21,7 @@ jobs:
     env:
       GITHUB_PAGES: "true"
       STATIC_EXPORT: "true"
+      PAGES_CUSTOM_DOMAIN: ${{ vars.PAGES_CUSTOM_DOMAIN }}
       NEXT_PUBLIC_CONTACT_MODE: mailto
       NEXT_PUBLIC_CONTACT_TO_EMAIL: ${{ vars.CONTACT_TO_EMAIL }}
     steps:
@@ -44,6 +45,10 @@ jobs:
 
       - name: Build static export
         run: npm run build
+
+      - name: Write CNAME for custom domain
+        if: ${{ vars.PAGES_CUSTOM_DOMAIN != '' }}
+        run: printf '%s\n' "$PAGES_CUSTOM_DOMAIN" > out/CNAME
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

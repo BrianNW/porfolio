@@ -6,9 +6,8 @@ import GlitchTitle from "../components/GlitchTitle";
 import TypewriterText from "../components/TypewriterText";
 import {
   emptyContactCaptcha,
-  emptyContactForm,
   fetchContactCaptchaChallenge,
-  submitContactForm,
+  verifyContactCaptcha,
 } from "@/lib/contact";
 import { withBasePath } from "@/lib/base-path";
 
@@ -18,33 +17,29 @@ import { useState, useEffect, useContext, useRef } from "react";
 function ContactOverlay({
   open,
   onClose,
-  form,
-  setForm,
-  submitted,
-  submitError,
+  verificationError,
+  isContactVisible,
   captcha,
   captchaAnswer,
   setCaptchaAnswer,
   isCaptchaLoading,
   captchaError,
   onRefreshCaptcha,
-  isSubmitting,
-  onSubmit,
+  isVerifying,
+  onVerify,
 }: {
   open: boolean;
   onClose: () => void;
-  form: { name: string; email: string; message: string };
-  setForm: React.Dispatch<React.SetStateAction<{ name: string; email: string; message: string }>>;
-  submitted: boolean;
-  submitError: string | null;
+  verificationError: string | null;
+  isContactVisible: boolean;
   captcha: { prompt: string; token: string };
   captchaAnswer: string;
   setCaptchaAnswer: React.Dispatch<React.SetStateAction<string>>;
   isCaptchaLoading: boolean;
   captchaError: string | null;
   onRefreshCaptcha: () => Promise<void>;
-  isSubmitting: boolean;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  isVerifying: boolean;
+  onVerify: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   return (
     <AnimatePresence>
@@ -64,62 +59,46 @@ function ContactOverlay({
           >
             <div className="w-full max-w-lg mx-auto relative">
               <button
-                className="absolute -top-4 right-4 text-5xl text-zinc-700 dark:text-zinc-200 hover:text-[#a78bfa] focus:outline-none leading-none"
+                className="absolute top-3 right-3 z-10 text-4xl text-zinc-700 dark:text-zinc-200 hover:text-[#a78bfa] focus:outline-none leading-none"
                 onClick={onClose}
                 aria-label="Close contact form"
               >
                 ×
               </button>
-              {submitted ? (
-                <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
+              {isContactVisible ? (
+                <div className="border border-green-200 bg-green-50 p-6 md:p-7 pr-12 text-base md:text-lg font-normal text-green-900 dark:border-green-500/40 dark:bg-green-950/40 dark:text-green-100">
+                  <p className="text-center text-2xl md:text-3xl font-normal">Contact details</p>
+                  <p className="mt-3">
+                    Email:{" "}
+                    <a
+                      href="mailto:briantechdom@gmail.com"
+                      className="font-normal underline underline-offset-4"
+                    >
+                      briantechdom@gmail.com
+                    </a>
+                  </p>
+                  <p className="mt-2">
+                    Phone:{" "}
+                    <a
+                      href="tel:+17787240250"
+                      className="font-normal underline underline-offset-4"
+                    >
+                      7787240250
+                    </a>
+                  </p>
+                </div>
               ) : (
                 <form
-                  onSubmit={onSubmit}
+                  onSubmit={onVerify}
                   className="flex flex-col gap-4 w-full"
                 >
-                  {submitError ? (
+                  {verificationError ? (
                     <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-950/40 dark:text-red-200">
-                      {submitError}
+                      {verificationError}
                     </div>
                   ) : null}
-                  <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Name
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Your Name"
-                      value={form.name}
-                      onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                      disabled={isSubmitting}
-                      required
-                      className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-1 w-full"
-                    />
-                  </label>
-                  <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Email
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Your Email"
-                      value={form.email}
-                      onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                      disabled={isSubmitting}
-                      required
-                      className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-1 w-full"
-                    />
-                  </label>
-                  <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Message
-                    <textarea
-                      name="message"
-                      placeholder="Your Message"
-                      value={form.message}
-                      onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                      disabled={isSubmitting}
-                      required
-                      className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-1 w-full"
-                      rows={4}
-                    />
-                  </label>
                   <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-                    <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check
+                    <label className="text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check (to prevent bots and spam)
                       <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
                         {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
                       </span>
@@ -130,7 +109,7 @@ function ContactOverlay({
                         placeholder="Answer"
                         value={captchaAnswer}
                         onChange={event => setCaptchaAnswer(event.target.value)}
-                        disabled={isSubmitting || isCaptchaLoading || !captcha.token}
+                        disabled={isVerifying || isCaptchaLoading || !captcha.token}
                         required
                         className="border px-3 py-2 bg-zinc-100/80 dark:bg-zinc-800/80 text-black dark:text-white mt-2 w-full"
                       />
@@ -138,7 +117,7 @@ function ContactOverlay({
                     <button
                       type="button"
                       onClick={() => void onRefreshCaptcha()}
-                      disabled={isSubmitting || isCaptchaLoading}
+                      disabled={isVerifying || isCaptchaLoading}
                       className="border px-3 py-2 text-sm text-black transition hover:bg-black/[.04] dark:text-white dark:hover:bg-white/[.08]"
                     >
                       Refresh
@@ -151,10 +130,10 @@ function ContactOverlay({
                   ) : null}
                   <button
                     type="submit"
-                    disabled={isSubmitting || isCaptchaLoading || !captcha.token}
+                    disabled={isVerifying || isCaptchaLoading || !captcha.token}
                     className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-white font-semibold py-2 transition"
                   >
-                    {isSubmitting ? "Sending..." : "Send"}
+                    {isVerifying ? "Verifying..." : "Reveal Contact Info"}
                   </button>
                 </form>
               )}
@@ -298,10 +277,9 @@ export default function Home() {
     }
   // All state and refs at the very top
   const [current, setCurrent] = useState(0);
-  const [form, setForm] = useState(emptyContactForm);
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [isContactVisible, setIsContactVisible] = useState(false);
   const [captcha, setCaptcha] = useState(emptyContactCaptcha);
   const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [isCaptchaLoading, setIsCaptchaLoading] = useState(false);
@@ -429,43 +407,36 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, []);
 
-  async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleContactVerify(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!captcha.token) {
-      setSubmitError("Captcha is still loading. Please try again in a moment.");
+      setVerificationError("Captcha is still loading. Please try again in a moment.");
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmitError(null);
+    setIsVerifying(true);
+    setVerificationError(null);
 
     try {
-      await submitContactForm({
-        ...form,
+      await verifyContactCaptcha({
         captchaAnswer,
         captchaToken: captcha.token,
       });
-      setSubmitted(true);
-      setForm(emptyContactForm);
-      setCaptchaAnswer("");
-      void refreshCaptcha();
-      setTimeout(() => {
-        setSubmitted(false);
-        setContactOpen(false);
-      }, 1500);
+
+      setIsContactVisible(true);
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Unable to send your message right now.";
+        error instanceof Error ? error.message : "Captcha verification failed. Please try again.";
 
-      setSubmitError(message);
+      setVerificationError(message);
 
       if (/captcha/i.test(message)) {
         setCaptchaAnswer("");
         void refreshCaptcha();
       }
     } finally {
-      setIsSubmitting(false);
+      setIsVerifying(false);
     }
   }
 
@@ -661,53 +632,37 @@ export default function Home() {
         <section id="contact" className="relative flex flex-col items-center justify-center min-h-screen w-full max-w-2xl px-8 py-32 bg-transparent mx-auto overflow-hidden">
           {/* <h2 className="section-title-glitch text-center">Contact Me</h2> */}
             <GlitchTitle as="h2" className="hero-main-glitch force-glitch relative z-10 text-zinc-800 dark:text-white text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-8">Contact Me</GlitchTitle>
-          {submitted ? (
-            <div className="text-green-600 dark:text-green-400 text-center py-8">Thank you! Message sent.</div>
+          {isContactVisible ? (
+            <div className="border border-green-200 bg-green-50 p-6 md:p-7 text-base md:text-lg font-normal text-green-900 dark:border-green-500/40 dark:bg-green-950/40 dark:text-green-100">
+              <p className="text-center text-2xl md:text-3xl font-normal">Contact details</p>
+              <p className="mt-3">
+                Email:{" "}
+                <a
+                  href="mailto:briantechdom@gmail.com"
+                  className="font-normal underline underline-offset-4"
+                >
+                  briantechdom@gmail.com
+                </a>
+              </p>
+              <p className="mt-2">
+                Phone:{" "}
+                <a
+                  href="tel:+17787240250"
+                  className="font-normal underline underline-offset-4"
+                >
+                  7787240250
+                </a>
+              </p>
+            </div>
           ) : (
-            <form onSubmit={handleContactSubmit} className="flex flex-col gap-3 w-full text-sm md:text-base">
-              {submitError ? (
+            <form onSubmit={handleContactVerify} className="flex flex-col gap-3 w-full text-sm md:text-base">
+              {verificationError ? (
                 <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-950/40 dark:text-red-200">
-                  {submitError}
+                  {verificationError}
                 </div>
               ) : null}
-              <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Name
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  value={form.name}
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  disabled={isSubmitting}
-                  required
-                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-1 w-full"
-                />
-              </label>
-              <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Email
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  disabled={isSubmitting}
-                  required
-                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-1 w-full"
-                />
-              </label>
-              <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Message
-                <textarea
-                  name="message"
-                  placeholder="Your Message"
-                  value={form.message}
-                  onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                  disabled={isSubmitting}
-                  required
-                  className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-1 w-full"
-                  rows={4}
-                />
-              </label>
               <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-                <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check
+                <label className="text-sm md:text-base text-zinc-700 dark:text-white font-light" style={{ fontWeight: 300 }}>Security Check (to prevent bots and spam)
                   <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300">
                     {isCaptchaLoading ? "Loading captcha..." : captcha.prompt || "Load the captcha to continue."}
                   </span>
@@ -718,7 +673,7 @@ export default function Home() {
                     placeholder="Answer"
                     value={captchaAnswer}
                     onChange={event => setCaptchaAnswer(event.target.value)}
-                    disabled={isSubmitting || isCaptchaLoading || !captcha.token}
+                    disabled={isVerifying || isCaptchaLoading || !captcha.token}
                     required
                     className="rounded border px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-sm md:text-base text-black dark:text-white mt-2 w-full"
                   />
@@ -726,7 +681,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => void refreshCaptcha()}
-                  disabled={isSubmitting || isCaptchaLoading}
+                  disabled={isVerifying || isCaptchaLoading}
                   className="rounded border px-3 py-2 text-xs md:text-sm text-black transition hover:bg-black/[.04] dark:text-white dark:hover:bg-white/[.08]"
                 >
                   Refresh
@@ -739,10 +694,10 @@ export default function Home() {
               ) : null}
               <button
                 type="submit"
-                disabled={isSubmitting || isCaptchaLoading || !captcha.token}
+                disabled={isVerifying || isCaptchaLoading || !captcha.token}
                 className="bg-[#a78bfa] hover:bg-[#c4a5fa] text-sm md:text-base text-white font-semibold py-2 rounded transition"
               >
-                {isSubmitting ? "Sending..." : "Send"}
+                {isVerifying ? "Verifying..." : "Reveal Contact Info"}
               </button>
             </form>
           )}
@@ -759,18 +714,16 @@ export default function Home() {
       <ContactOverlay
         open={contactOpen}
         onClose={() => setContactOpen(false)}
-        form={form}
-        setForm={setForm}
-        submitted={submitted}
-        submitError={submitError}
+        verificationError={verificationError}
+        isContactVisible={isContactVisible}
         captcha={captcha}
         captchaAnswer={captchaAnswer}
         setCaptchaAnswer={setCaptchaAnswer}
         isCaptchaLoading={isCaptchaLoading}
         captchaError={captchaError}
         onRefreshCaptcha={refreshCaptcha}
-        isSubmitting={isSubmitting}
-        onSubmit={handleContactSubmit}
+        isVerifying={isVerifying}
+        onVerify={handleContactVerify}
       />
       <div className="relative z-10 min-h-screen w-full bg-white dark:bg-black transition-colors duration-[1200ms] ease-[cubic-bezier(.4,0,.2,1)]">
         {/* Static cyberpunk video background for About, FAQ, Contact */}

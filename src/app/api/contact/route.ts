@@ -133,6 +133,37 @@ export async function GET() {
   });
 }
 
+export async function PATCH(request: Request) {
+  const payload = await request.json().catch(() => null);
+
+  if (!payload || typeof payload !== "object") {
+    return NextResponse.json({ error: "Invalid request payload." }, { status: 400 });
+  }
+
+  const record = payload as Record<string, unknown>;
+  const captchaToken = typeof record.captchaToken === "string" ? record.captchaToken.trim() : "";
+  const captchaAnswer = typeof record.captchaAnswer === "string" ? record.captchaAnswer.trim() : "";
+
+  if (!captchaToken || !captchaAnswer) {
+    return NextResponse.json(
+      { error: "Complete the captcha before revealing contact details." },
+      { status: 400 }
+    );
+  }
+
+  if (captchaAnswer.length > 32 || captchaToken.length > 500) {
+    return NextResponse.json({ error: "Captcha verification failed. Please try again." }, { status: 400 });
+  }
+
+  const captchaCheck = verifyCaptchaToken(captchaToken, captchaAnswer);
+
+  if ("error" in captchaCheck) {
+    return NextResponse.json({ error: captchaCheck.error }, { status: 400 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
+
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
   const parsed = parseContactSubmissionPayload(payload);

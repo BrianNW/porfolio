@@ -210,3 +210,29 @@ export async function submitContactForm(payload: ContactSubmissionPayload) {
     throw new Error(result?.error || "Unable to send your message right now.");
   }
 }
+
+export async function verifyContactCaptcha(payload: {
+  captchaAnswer: string;
+  captchaToken: string;
+}) {
+  if (isStaticContactMode()) {
+    verifyClientCaptcha(payload.captchaAnswer, payload.captchaToken);
+    return;
+  }
+
+  const response = await fetch(withBasePath("/api/contact"), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = (await response.json().catch(() => null)) as
+    | { error?: string }
+    | null;
+
+  if (!response.ok) {
+    throw new Error(result?.error || "Captcha verification failed. Please try again.");
+  }
+}
